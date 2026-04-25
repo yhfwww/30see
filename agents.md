@@ -31,10 +31,11 @@
 
 - 使用 **CounterAPI** 免费外部统计服务
 - 官网：<https://counterapi.dev>
-- Workspace：30seeweb
-- Counter Name：30see
-- 免费额度：1,000 次/天
-- 无需注册（已注册）
+- **Workspace**：30seeweb
+- **Counter Name**：30see
+- **免费额度**：1,000 次/天
+- **API 端点**：`https://api.counterapi.dev/v2/30seeweb/30see`
+- **数据更新**：实时更新，有缓存缓冲（设计行为）
 
 ### 文件结构
 
@@ -42,16 +43,23 @@
   - `StatsAPI.getStats()`：获取当前统计数据
   - `StatsAPI.incrementVisit(page)`：触发访问统计
   - `StatsAPI.getPageVisits(page)`：获取指定页面访问量
+  - 包含详细的错误处理
 
 ### 管理员页面
 
 - **admin.html**：独立的管理员统计页面
   - 简单密码认证（MD5加密）
   - 展示网站总访问量
-  - 默认密码：158...316
+  - **密码**：158.......16（MD5: ab31b1c8809d0129331079edc9438293）
+
+### 计数覆盖页面
+
+- **index.html**：首页访问计数
+- **relaxation.html**：放松效果页面访问计数
 
 ### 使用方式
 
+- 访问首页和放松效果页面时自动记录访问量
 - 管理员访问 `/admin.html` 输入密码查看统计
-- 访问首页时自动记录访问量
+- 数据会有短暂缓存延迟，属正常现象
 
