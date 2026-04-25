@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雨夜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+        }
+
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at 50% 0%, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .city {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(180deg, transparent 0%, rgba(20, 20, 40, 0.8) 30%, #0a0a15 100%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .title {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+            font-size: 24px;
+            letter-spacing: 8px;
+            text-shadow: 0 0 20px rgba(100, 150, 255, 0.5);
+            opacity: 0;
+            animation: fadeIn 3s ease-out 1s forwards;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="rain"></canvas>
+    <div class="city"></div>
+    <div class="overlay"></div>
+    <div class="title">雨夜</div>
+
+    <script>
+        const canvas = document.getElementById('rain');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let drops = [];
+        let ripples = [];
+        let mistParticles = [];
+        const dropCount = 100;
+        const mistCount = 30;
+
+        class Drop {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = -20 - Math.random() * 100;
+                this.length = 15 + Math.random() * 25;
+                this.speed = 8 + Math.random() * 12;
+                this.opacity = 0.3 + Math.random() * 0.5;
+                this.thickness = 0.5 + Math.random() * 1;
+            }
+
+            update() {
+                this.y += this.speed;
+
+                if (this.y > height * 0.7) {
+                    if (Math.random() < 0.1) {
+                        ripples.push(new Ripple(this.x, height * 0.7));
+                    }
+                }
+
+                if (this.y > height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(174, 194, 224, ${this.opacity})`;
+                ctx.lineWidth = this.thickness;
+                ctx.lineCap = 'round';
+
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x + 1, this.y + this.length);
+
+                ctx.stroke();
+
+                ctx.strokeStyle = `rgba(200, 220, 255, ${this.opacity * 0.3})`;
+                ctx.lineWidth = this.thickness * 2;
+                ctx.stroke();
+            }
+        }
+
+        class Ripple {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 0;
+                this.maxRadius = 20 + Math.random() * 15;
+                this.speed = 0.8 + Math.random() * 0.5;
+                this.opacity = 0.6;
+            }
+
+            update() {
+                this.radius += this.speed;
+                this.opacity = 0.6 * (1 - this.radius / this.maxRadius);
+
+                if (this.radius > this.maxRadius) {
+                    return false;
+                }
+                return true;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(200, 220, 255, ${this.opacity})`;
+                ctx.lineWidth = 1;
+                ctx.ellipse(this.x, this.y, this.radius * 1.5, this.radius * 0.3, 0, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+        }
+
+        class MistParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = height * 0.5 + Math.random() * height * 0.4;
+                this.size = 50 + Math.random() * 100;
+                this.opacity = 0.02 + Math.random() * 0.05;
+                this.speedX = -0.2 - Math.random() * 0.3;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += Math.sin(this.x * 0.01) * 0.1;
+
+                if (this.x < -this.size) {
+                    this.x = width + this.size;
+                }
+            }
+
+            draw() {
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                gradient.addColorStop(0, `rgba(150, 180, 200, ${this.opacity})`);
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        class WindowDrop {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height * 0.6;
+                this.radius = 1 + Math.random() * 3;
+                this.speed = 0.3 + Math.random() * 0.5;
+                this.trail = [];
+                this.maxTrail = 10;
+            }
+
+            update() {
+                this.trail.push({ x: this.x, y: this.y });
+                if (this.trail.length > this.maxTrail) {
+                    this.trail.shift();
+                }
+
+                this.y += this.speed;
+                this.x += Math.random() * 0.5 - 0.25;
+
+                if (this.y > height * 0.6) {
+                    this.trail.forEach((pos, i) => {
+                        pos.y += 0.5;
+                        pos.x += (Math.random() - 0.5) * 2;
+                    });
+                }
+
+                if (this.y > height * 0.7) {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height * 0.3;
+                    this.trail = [];
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(200, 220, 255, 0.3)`;
+                ctx.lineWidth = this.radius * 0.5;
+
+                for (let i = 0; i < this.trail.length; i++) {
+                    const pos = this.trail[i];
+                    if (i === 0) {
+                        ctx.moveTo(pos.x, pos.y);
+                    } else {
+                        ctx.lineTo(pos.x, pos.y);
+                    }
+                }
+                ctx.stroke();
+
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.radius * 2
+                );
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+                gradient.addColorStop(0.5, 'rgba(200, 220, 255, 0.4)');
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius * 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        let windowDrops = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        function init() {
+            resize();
+            drops = [];
+            ripples = [];
+            mistParticles = [];
+            windowDrops = [];
+
+            for (let i = 0; i < dropCount; i++) {
+                drops.push(new Drop());
+            }
+
+            for (let i = 0; i < mistCount; i++) {
+                mistParticles.push(new MistParticle());
+            }
+
+            for (let i = 0; i < 15; i++) {
+                windowDrops.push(new WindowDrop());
+            }
+        }
+
+        function drawBuildings() {
+            ctx.save();
+            ctx.globalAlpha = 0.15;
+
+            const buildings = [
+                { x: 0, w: 80, h: 150 },
+                { x: 70, w: 60, h: 200 },
+                { x: 120, w: 100, h: 120 },
+                { x: 200, w: 50, h: 180 },
+                { x: 240, w: 80, h: 140 },
+                { x: 310, w: 120, h: 220 },
+                { x: 420, w: 70, h: 160 },
+                { x: 480, w: 90, h: 190 },
+                { x: 560, w: 60, h: 130 },
+                { x: 610, w: 100, h: 210 },
+                { x: 700, w: 80, h: 170 },
+                { x: 770, w: 110, h: 200 },
+                { x: 870, w: 70, h: 140 },
+                { x: 930, w: 90, h: 180 },
+            ];
+
+            buildings.forEach(b => {
+                const bx = (width / 1000) * b.x;
+                const bw = (width / 1000) * b.w;
+                const bh = (height / 600) * b.h;
+
+                ctx.fillStyle = '#0a0a15';
+                ctx.fillRect(bx, height - bh, bw, bh);
+
+                for (let i = 0; i < 5; i++) {
+                    const lx = bx + Math.random() * bw;
+                    const ly = height - bh + Math.random() * bh * 0.8;
+                    const lw = 3 + Math.random() * 5;
+                    const lh = 4 + Math.random() * 6;
+
+                    if (Math.random() < 0.3) {
+                        ctx.fillStyle = `rgba(255, 230, 150, ${0.3 + Math.random() * 0.4})`;
+                        ctx.fillRect(lx, ly, lw, lh);
+                    }
+                }
+            });
+
+            ctx.restore();
+        }
+
+        function drawWetGround() {
+            ctx.save();
+
+            const gradient = ctx.createLinearGradient(0, height * 0.75, 0, height);
+            gradient.addColorStop(0, 'rgba(30, 40, 60, 0)');
+            gradient.addColorStop(0.3, 'rgba(30, 40, 60, 0.3)');
+            gradient.addColorStop(1, 'rgba(20, 25, 35, 0.8)');
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, height * 0.75, width, height * 0.25);
+
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            ctx.fillStyle = 'rgba(10, 15, 25, 0.1)';
+            ctx.fillRect(0, 0, width, height);
+
+            drawBuildings();
+            drawWetGround();
+
+            for (let mist of mistParticles) {
+                mist.update();
+                mist.draw();
+            }
+
+            for (let drop of drops) {
+                drop.update();
+                drop.draw();
+            }
+
+            ripples = ripples.filter(ripple => {
+                const alive = ripple.update();
+                if (alive) ripple.draw();
+                return alive;
+            });
+
+            for (let wdrop of windowDrops) {
+                wdrop.update();
+                wdrop.draw();
+            }
+
+            ctx.save();
+            ctx.globalAlpha = 0.02;
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, width, height);
+            ctx.restore();
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            init();
+        });
+
+        canvas.addEventListener('click', () => {
+            for (let i = 0; i < 20; i++) {
+                const drop = new Drop();
+                drop.y = -20;
+                drops.push(drop);
+            }
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

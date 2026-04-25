@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>樱花飘落</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: linear-gradient(180deg, #87CEEB 0%, #FFB6C1 50%, #FFF0F5 100%);
+            min-height: 100vh;
+        }
+
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .title {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+            font-size: 36px;
+            letter-spacing: 12px;
+            text-shadow: 0 0 20px rgba(255, 182, 193, 0.8),
+                         0 0 40px rgba(255, 182, 193, 0.5);
+            opacity: 0;
+            animation: fadeIn 3s ease-out 1s forwards;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .ground {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(180deg, transparent 0%, rgba(144, 238, 144, 0.3) 100%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="sakura"></canvas>
+    <div class="ground"></div>
+    <div class="title">桜</div>
+
+    <script>
+        const canvas = document.getElementById('sakura');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let petals = [];
+        const petalCount = 60;
+
+        class Petal {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = -20 - Math.random() * 100;
+                this.size = 8 + Math.random() * 12;
+                this.speedY = 0.5 + Math.random() * 1.5;
+                this.speedX = 0;
+                this.angle = Math.random() * Math.PI * 2;
+                this.angleSpeed = (Math.random() - 0.5) * 0.05;
+                this.swayAmplitude = 20 + Math.random() * 30;
+                this.swaySpeed = 0.02 + Math.random() * 0.03;
+                this.swayOffset = Math.random() * Math.PI * 2;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.03;
+                this.opacity = 0.6 + Math.random() * 0.4;
+                this.hue = 340 + Math.random() * 20;
+                this.saturation = 50 + Math.random() * 30;
+                this.lightness = 70 + Math.random() * 20;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.angle += this.angleSpeed;
+                this.rotation += this.rotationSpeed;
+
+                this.x += Math.sin(this.angle + this.swayOffset) * 0.5;
+                this.x += Math.sin(this.angle) * this.swayAmplitude * 0.02;
+
+                if (this.y > height + 20) {
+                    this.reset();
+                    this.y = -20;
+                    this.x = Math.random() * width;
+                }
+
+                if (this.x < -50) this.x = width + 50;
+                if (this.x > width + 50) this.x = -50;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+                gradient.addColorStop(0, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness + 10}%, ${this.opacity})`);
+                gradient.addColorStop(0.7, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.opacity * 0.8})`);
+                gradient.addColorStop(1, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness - 10}%, 0)`);
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+
+                ctx.moveTo(0, -this.size);
+                ctx.bezierCurveTo(
+                    this.size * 0.8, -this.size * 0.5,
+                    this.size * 0.8, this.size * 0.5,
+                    0, this.size
+                );
+                ctx.bezierCurveTo(
+                    -this.size * 0.8, this.size * 0.5,
+                    -this.size * 0.8, -this.size * 0.5,
+                    0, -this.size
+                );
+                ctx.fill();
+
+                ctx.fillStyle = `hsla(${this.hue + 10}, ${this.saturation}%, ${this.lightness + 20}%, ${this.opacity * 0.3})`;
+                ctx.beginPath();
+                ctx.arc(0, -this.size * 0.2, this.size * 0.15, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        function init() {
+            resize();
+            petals = [];
+            for (let i = 0; i < petalCount; i++) {
+                const petal = new Petal();
+                petal.y = Math.random() * height;
+                petals.push(petal);
+            }
+        }
+
+        function drawBranch(x, y, angle, length, depth) {
+            if (depth <= 0 || length < 5) return;
+
+            ctx.strokeStyle = '#5D4037';
+            ctx.lineWidth = depth * 1.5;
+            ctx.lineCap = 'round';
+
+            const endX = x + Math.cos(angle) * length;
+            const endY = y + Math.sin(angle) * length;
+
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+
+            drawBranch(endX, endY, angle - 0.4, length * 0.7, depth - 1);
+            drawBranch(endX, endY, angle + 0.4, length * 0.7, depth - 1);
+            drawBranch(endX, endY, angle - 0.2, length * 0.8, depth - 1);
+            drawBranch(endX, endY, angle + 0.2, length * 0.8, depth - 1);
+        }
+
+        function drawTree() {
+            ctx.save();
+            ctx.globalAlpha = 0.15;
+
+            drawBranch(width * 0.1, height, -Math.PI / 2.5, 120, 5);
+            drawBranch(width * 0.9, height, -Math.PI / 2.5, 120, 5);
+            drawBranch(width * 0.3, height, -Math.PI / 2.2, 80, 4);
+            drawBranch(width * 0.7, height, -Math.PI / 2.2, 80, 4);
+
+            ctx.restore();
+        }
+
+        function drawGround() {
+            ctx.save();
+            ctx.globalAlpha = 0.1;
+
+            for (let i = 0; i < 50; i++) {
+                const x = Math.random() * width;
+                const y = height - Math.random() * 30;
+                const size = 3 + Math.random() * 5;
+
+                ctx.fillStyle = `hsla(340, 60%, 80%, ${Math.random() * 0.3})`;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            drawTree();
+            drawGround();
+
+            for (let petal of petals) {
+                petal.update();
+                petal.draw();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            init();
+        });
+
+        canvas.addEventListener('click', () => {
+            for (let i = 0; i < 10; i++) {
+                const petal = new Petal();
+                petal.x = Math.random() * width;
+                petal.y = -20;
+                petals.push(petal);
+            }
+            if (petals.length > 150) {
+                petals = petals.slice(-120);
+            }
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

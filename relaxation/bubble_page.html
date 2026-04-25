@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彩色泡泡生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .title {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            z-index: 100;
+            text-align: center;
+        }
+
+        .controls {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #bubbleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-20px) rotate(120deg);
+            }
+            66% {
+                transform: translateY(10px) rotate(240deg);
+            }
+        }
+
+        .info {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            font-size: 14px;
+            z-index: 100;
+        }
+
+        .bubble-count {
+            position: absolute;
+            top: 150px;
+            right: 30px;
+            color: white;
+            font-size: 18px;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 15px;
+            border-radius: 15px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🫧 彩色泡泡生成器</h1>
+        
+        <div class="controls">
+            <button onclick="generateBubbles(10)">生成10个泡泡</button>
+            <button onclick="generateBubbles(50)">生成50个泡泡</button>
+            <button onclick="generateBubbles(100)">生成100个泡泡</button>
+            <button onclick="clearBubbles()">清除所有泡泡</button>
+            <button onclick="generateRandomBubbles()">随机生成</button>
+            <button onclick="startAutoGenerate()">自动生成</button>
+            <button onclick="stopAutoGenerate()">停止自动</button>
+        </div>
+
+        <div class="bubble-count" id="bubbleCount">泡泡数量: 0</div>
+
+        <canvas id="bubbleCanvas"></canvas>
+
+        <div class="info">
+            💡 点击屏幕任意位置生成泡泡 | 使用按钮控制泡泡生成 | 泡泡会自动飘动和消失
+        </div>
+    </div>
+
+    <script>
+        let bubbleCount = 0;
+        let autoGenerateInterval = null;
+        let canvas = document.getElementById('bubbleCanvas');
+        let ctx = canvas.getContext('2d');
+
+        // 设置画布大小
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // 生成随机颜色
+        function getRandomColor() {
+            const colors = [
+                'rgba(255, 99, 132, 0.7)',   // 红色
+                'rgba(54, 162, 235, 0.7)',   // 蓝色
+                'rgba(255, 205, 86, 0.7)',   // 黄色
+                'rgba(75, 192, 192, 0.7)',   // 青色
+                'rgba(153, 102, 255, 0.7)',  // 紫色
+                'rgba(255, 159, 64, 0.7)',   // 橙色
+                'rgba(199, 199, 199, 0.7)',  // 灰色
+                'rgba(83, 102, 255, 0.7)',   // 靛蓝色
+                'rgba(255, 99, 255, 0.7)',   // 品红色
+                'rgba(99, 255, 132, 0.7)'    // 绿色
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // 生成泡泡
+        function createBubble(x, y) {
+            const bubble = {
+                x: x || Math.random() * canvas.width,
+                y: y || Math.random() * canvas.height,
+                radius: Math.random() * 30 + 10,
+                color: getRandomColor(),
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2 - 1,  // 向上飘
+                life: 1.0,
+                decay: Math.random() * 0.005 + 0.002
+            };
+
+            return bubble;
+        }
+
+        // 绘制泡泡
+        function drawBubble(bubble) {
+            ctx.save();
+            
+            // 创建渐变效果
+            const gradient = ctx.createRadialGradient(
+                bubble.x - bubble.radius/3, bubble.y - bubble.radius/3, 0,
+                bubble.x, bubble.y, bubble.radius
+            );
+            
+            const color = bubble.color.replace('0.7', bubble.life.toString());
+            gradient.addColorStop(0, color.replace('0.7', '0.9'));
+            gradient.addColorStop(0.7, color);
+            gradient.addColorStop(1, color.replace('0.7', '0.3'));
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 添加高光效果
+            ctx.fillStyle = `rgba(255, 255, 255, ${0.3 * bubble.life})`;
+            ctx.beginPath();
+            ctx.arc(bubble.x - bubble.radius/3, bubble.y - bubble.radius/3, bubble.radius/3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        // 更新泡泡
+        function updateBubble(bubble) {
+            bubble.x += bubble.vx;
+            bubble.y += bubble.vy;
+            bubble.life -= bubble.decay;
+            
+            // 边界反弹
+            if (bubble.x < 0 || bubble.x > canvas.width) {
+                bubble.vx *= -0.8;
+                bubble.x = Math.max(0, Math.min(canvas.width, bubble.x));
+            }
+            
+            if (bubble.y < 0) {
+                bubble.vy *= -0.8;
+                bubble.y = 0;
+            }
+            
+            // 重力效果
+            bubble.vy += 0.01;
+            
+            return bubble.life > 0;
+        }
+
+        let bubbles = [];
+
+        // 动画循环
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 更新和绘制泡泡
+            bubbles = bubbles.filter(bubble => {
+                const alive = updateBubble(bubble);
+                if (alive) {
+                    drawBubble(bubble);
+                }
+                return alive;
+            });
+            
+            updateBubbleCount();
+            requestAnimationFrame(animate);
+        }
+
+        // 生成指定数量的泡泡
+        function generateBubbles(count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    bubbles.push(createBubble());
+                }, i * 50);  // 错开生成时间，创造波浪效果
+            }
+        }
+
+        // 清除所有泡泡
+        function clearBubbles() {
+            bubbles = [];
+            updateBubbleCount();
+        }
+
+        // 随机生成泡泡
+        function generateRandomBubbles() {
+            const count = Math.floor(Math.random() * 100) + 20;
+            generateBubbles(count);
+        }
+
+        // 开始自动生成
+        function startAutoGenerate() {
+            if (autoGenerateInterval) return;
+            
+            autoGenerateInterval = setInterval(() => {
+                const count = Math.floor(Math.random() * 10) + 1;
+                for (let i = 0; i < count; i++) {
+                    bubbles.push(createBubble());
+                }
+            }, 1000);
+        }
+
+        // 停止自动生成
+        function stopAutoGenerate() {
+            if (autoGenerateInterval) {
+                clearInterval(autoGenerateInterval);
+                autoGenerateInterval = null;
+            }
+        }
+
+        // 更新泡泡计数
+        function updateBubbleCount() {
+            bubbleCount = bubbles.length;
+            document.getElementById('bubbleCount').textContent = `泡泡数量: ${bubbleCount}`;
+        }
+
+        // 点击生成泡泡
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // 在点击位置生成多个泡泡
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const bubble = createBubble(
+                        x + (Math.random() - 0.5) * 50,
+                        y + (Math.random() - 0.5) * 50
+                    );
+                    bubbles.push(bubble);
+                }, i * 100);
+            }
+        });
+
+        // 初始化
+        generateBubbles(20);
+        animate();
+
+        // 页面加载完成后的欢迎效果
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                generateBubbles(30);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
