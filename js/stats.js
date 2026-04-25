@@ -5,7 +5,8 @@ const StatsAPI = {
     async getStats() {
         try {
             const response = await fetch(`https://api.counterapi.dev/v2/${this.workspace}/${this.counterName}/stats`);
-            const data = await response.json();
+            const result = await response.json();
+            const data = result.data || {};
             return {
                 visits: data.up_count || 0,
                 pages: {}
@@ -19,7 +20,8 @@ const StatsAPI = {
     async incrementVisit(page = 'index') {
         try {
             const response = await fetch(`https://api.counterapi.dev/v2/${this.workspace}/${this.counterName}/up`);
-            const data = await response.json();
+            const result = await response.json();
+            const data = result.data || {};
             return {
                 visits: data.up_count || 0,
                 pages: {}

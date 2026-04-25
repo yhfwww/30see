@@ -291,7 +291,8 @@ async function loadStats() {
 
     try {
         const response = await fetch('https://api.counterapi.dev/v2/30seeweb/30see/stats');
-        const data = await response.json();
+        const result = await response.json();
+        const data = result.data || {};
 
         loadingEl.style.display = 'none';
         contentEl.style.display = 'block';
