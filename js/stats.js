@@ -5,6 +5,19 @@ const StatsAPI = {
     async getStats() {
         try {
             const response = await fetch(`https://api.counterapi.dev/v2/${this.workspace}/${this.counterName}/stats`);
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('401 Unauthorized: 无效或过期的 token');
+                } else if (response.status === 403) {
+                    throw new Error('403 Forbidden: token 没有所需的权限');
+                } else if (response.status === 404) {
+                    throw new Error('404 Not Found: workspace 名称不正确');
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+                }
+            }
+            
             const result = await response.json();
             const data = result.data || {};
             return {
@@ -20,6 +33,19 @@ const StatsAPI = {
     async incrementVisit(page = 'index') {
         try {
             const response = await fetch(`https://api.counterapi.dev/v2/${this.workspace}/${this.counterName}/up`);
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('401 Unauthorized: 无效或过期的 token');
+                } else if (response.status === 403) {
+                    throw new Error('403 Forbidden: token 没有所需的权限');
+                } else if (response.status === 404) {
+                    throw new Error('404 Not Found: workspace 名称不正确');
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+                }
+            }
+            
             const result = await response.json();
             const data = result.data || {};
             return {
