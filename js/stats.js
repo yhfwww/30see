@@ -1,12 +1,13 @@
 const StatsAPI = {
-    host: window.location.hostname,
+    workspace: '30seeweb',
+    counterName: '30see',
 
     async getStats() {
         try {
-            const response = await fetch(`https://finicounter.eu.org/counter?host=${this.host}`);
+            const response = await fetch(`https://api.counterapi.dev/v2/${this.workspace}/${this.counterName}/stats`);
             const data = await response.json();
             return {
-                visits: data.total || 0,
+                visits: data.up_count || 0,
                 pages: {}
             };
         } catch (error) {
@@ -16,20 +17,17 @@ const StatsAPI = {
     },
 
     async incrementVisit(page = 'index') {
-        return new Promise((resolve) => {
-            const script = document.createElement('script');
-            script.src = 'https://finicounter.eu.org/finicounter.js';
-            script.async = true;
-            script.onload = async () => {
-                const stats = await this.getStats();
-                resolve(stats);
+        try {
+            const response = await fetch(`https://api.counterapi.dev/v2/${this.workspace}/${this.counterName}/up`);
+            const data = await response.json();
+            return {
+                visits: data.up_count || 0,
+                pages: {}
             };
-            script.onerror = async () => {
-                console.error('FiniCounter 加载失败');
-                resolve({ visits: 0, pages: {} });
-            };
-            document.head.appendChild(script);
-        });
+        } catch (error) {
+            console.error('增加访问量失败:', error);
+            return { visits: 0, pages: {} };
+        }
     },
 
     async getPageVisits(page) {
