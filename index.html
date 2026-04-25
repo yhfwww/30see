@@ -1,13 +1,322 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>My Site</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30see - AI Tutorials for Everyone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary-blue: #0066cc;
+--primary-blue-light: #0099ff;
+--primary-orange: #ff6600;
+--primary-orange-light: #ff9933;
+--accent-purple: #6a0dad;
+--accent-red: #ff3333;
+--dark: #1a1a2e;
+--light: #f8f9fa;
+--white: #ffffff;
+}
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+body {
+font-family: 'Poppins', sans-serif;
+background: linear-gradient(135deg, var(--light) 0%, #e9ecef 100%);
+color: var(--dark);
+line-height: 1.6;
+overflow-x: hidden;
+}
+.hero {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+padding: 40px 20px;
+position: relative;
+overflow: hidden;
+}
+.hero::before {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: radial-gradient(circle, rgba(0, 102, 204, 0.1) 0%, transparent 70%);
+animation: pulse 8s ease-in-out infinite;
+z-index: 0;
+}
+@keyframes pulse {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.1); }
+}
+.logo-container {
+position: relative;
+z-index: 1;
+margin-bottom: 40px;
+animation: fadeInDown 1s ease-out;
+}
+.logo {
+max-width: 450px;
+width: 100%;
+height: auto;
+filter: drop-shadow(0 10px 30px rgba(0, 102, 204, 0.2));
+transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.logo:hover {
+transform: scale(1.05) rotate(-1deg);
+}
+@keyframes fadeInDown {
+from {
+opacity: 0;
+transform: translateY(-40px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.tagline {
+font-family: 'Playfair Display', serif;
+font-size: 3.5rem;
+font-weight: 700;
+background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-orange) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+margin-bottom: 20px;
+position: relative;
+z-index: 1;
+animation: fadeInUp 1s ease-out 0.2s both;
+}
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(40px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.description {
+font-size: 1.3rem;
+color: #495057;
+max-width: 600px;
+margin-bottom: 40px;
+position: relative;
+z-index: 1;
+animation: fadeInUp 1s ease-out 0.4s both;
+}
+.cta-buttons {
+display: flex;
+gap: 20px;
+flex-wrap: wrap;
+justify-content: center;
+position: relative;
+z-index: 1;
+animation: fadeInUp 1s ease-out 0.6s both;
+}
+.btn {
+padding: 16px 36px;
+font-size: 1.1rem;
+font-weight: 600;
+border: none;
+border-radius: 50px;
+cursor: pointer;
+text-decoration: none;
+display: inline-flex;
+align-items: center;
+gap: 10px;
+transition: all 0.3s ease;
+position: relative;
+overflow: hidden;
+}
+.btn-primary {
+background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+color: var(--white);
+box-shadow: 0 10px 30px rgba(0, 102, 204, 0.3);
+}
+.btn-primary::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+transition: left 0.5s ease;
+}
+.btn-primary:hover::before {
+left: 100%;
+}
+.btn-primary:hover {
+transform: translateY(-4px);
+box-shadow: 0 15px 40px rgba(0, 102, 204, 0.4);
+}
+.btn-secondary {
+background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-light));
+color: var(--white);
+box-shadow: 0 10px 30px rgba(255, 102, 0, 0.3);
+}
+.btn-secondary::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+transition: left 0.5s ease;
+}
+.btn-secondary:hover::before {
+left: 100%;
+}
+.btn-secondary:hover {
+transform: translateY(-4px);
+box-shadow: 0 15px 40px rgba(255, 102, 0, 0.4);
+}
+.features {
+padding: 100px 20px;
+background: var(--white);
+}
+.features-container {
+max-width: 1200px;
+margin: 0 auto;
+}
+.features-title {
+text-align: center;
+font-family: 'Playfair Display', serif;
+font-size: 2.8rem;
+margin-bottom: 60px;
+color: var(--primary-blue);
+}
+.features-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 30px;
+}
+.feature-card {
+background: linear-gradient(135deg, var(--light) 0%, var(--white) 100%);
+padding: 40px;
+border-radius: 20px;
+text-align: center;
+border: 2px solid transparent;
+transition: all 0.3s ease;
+position: relative;
+overflow: hidden;
+}
+.feature-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: linear-gradient(90deg, var(--primary-blue), var(--primary-orange));
+}
+.feature-card:hover {
+transform: translateY(-10px);
+box-shadow: 0 20px 50px rgba(0, 102, 204, 0.15);
+border-color: var(--primary-blue);
+}
+.feature-icon {
+font-size: 3.5rem;
+margin-bottom: 20px;
+}
+.feature-title {
+font-size: 1.5rem;
+font-weight: 700;
+color: var(--primary-blue);
+margin-bottom: 15px;
+}
+.feature-desc {
+color: #6c757d;
+font-size: 1rem;
+}
+footer {
+background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
+color: var(--white);
+padding: 40px 20px;
+text-align: center;
+}
+.footer-logo {
+max-width: 200px;
+margin-bottom: 20px;
+}
+.footer-text {
+opacity: 0.8;
+font-size: 0.9rem;
+}
+@media (max-width: 768px) {
+.tagline {
+font-size: 2.2rem;
+}
+.description {
+font-size: 1.1rem;
+}
+.btn {
+padding: 14px 28px;
+font-size: 1rem;
+}
+.features-title {
+font-size: 2rem;
+}
+}
+</style>
 </head>
 <body>
-  <h1>Hello, GitHub Pages 🚀</h1>
-  <p>我的网站上线了</p>
-
-  <a href="fireworks.html">进入下一页</a>
+<section class="hero">
+<div class="logo-container">
+<img src="images/logo.png" alt="30see Logo" class="logo">
+</div>
+<h1 class="tagline">AI Tutorials for Everyone</h1>
+<p class="description">
+面向所有人的人工智能教程，帮助你快速掌握AI技术，开启智能时代的学习之旅。
+</p>
+<div class="cta-buttons">
+<a href="fireworks.html" class="btn btn-primary">
+🌟 开始探索
+</a>
+<a href="#" class="btn btn-secondary">
+📚 查看教程
+</a>
+</div>
+</section>
+ 
+<section class="features">
+<div class="features-container">
+<h2 class="features-title">为什么选择 30see?</h2>
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon">🧠</div>
+<h3 class="feature-title">AI驱动</h3>
+<p class="feature-desc">结合最新人工智能技术，提供智能学习体验</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">🎓</div>
+<h3 class="feature-title">专业内容</h3>
+<p class="feature-desc">由AI专家精心编撰的高质量教程内容</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">🚀</div>
+<h3 class="feature-title">快速入门</h3>
+<p class="feature-desc">从零基础到进阶，轻松掌握AI技能</p>
+</div>
+</div>
+</div>
+</section>
+ 
+<footer>
+<img src="images/logo.png" alt="30see Logo" class="footer-logo">
+<p class="footer-text">© 2026 30see. All rights reserved.</p>
+</footer>
 </body>
 </html>
