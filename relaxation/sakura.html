@@ -52,6 +52,33 @@
             z-index: 5;
         }
 
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .controls button {
+            padding: 8px 16px;
+            font-size: 12px;
+            background: rgba(255, 182, 193, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 182, 193, 0.4);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+        }
+
+        .controls button:hover {
+            background: rgba(255, 182, 193, 0.3);
+            border-color: rgba(255, 182, 193, 0.6);
+        }
+
         @keyframes fadeIn {
             to { opacity: 1; }
         }
@@ -61,6 +88,11 @@
     <canvas id="sakura"></canvas>
     <div class="ground"></div>
     <div class="title">桜</div>
+    
+    <div class="controls">
+        <button onclick="window.location.href='../relaxation.html'">返回放松效果</button>
+        <button onclick="window.location.href='../index.html'">返回首页</button>
+    </div>
 
     <script>
         const canvas = document.getElementById('sakura');
