@@ -20,3 +20,28 @@
 - 蓝色和橙色作为主色调贯穿整个页面
 - 渐变效果与 LOGO 保持一致
 - 卡片和按钮使用协调的阴影效果
+
+## 访问量统计功能
+
+### 技术方案
+- 使用 **FiniCounter** 免费外部统计服务
+- 官网：https://finicounter.eu.org
+- 纯静态网站，无需后端服务器
+- 完全免费，无需注册
+
+### 文件结构
+- **js/stats.js**：访问量统计核心模块
+  - `StatsAPI.getStats()`：获取当前统计数据
+  - `StatsAPI.incrementVisit(page)`：触发访问统计
+  - `StatsAPI.getPageVisits(page)`：获取指定页面访问量
+
+### 管理员页面
+- **admin.html**：独立的管理员统计页面
+  - 简单密码认证（MD5加密）
+  - 展示网站总访问量
+  - 默认密码：admin（请及时修改！）
+
+### 使用方式
+- 管理员访问 `/admin.html` 输入密码查看统计
+- 访问首页时自动记录访问量
+- 在任意页面添加 `<span id="finicount_views"></span>` 可显示访问量
