@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="js/stats.js"></script>
 <style>
 :root {
 --primary-blue: #0066cc;
@@ -293,7 +294,7 @@ font-size: 2rem;
 </a>
 </div>
 </section>
- 
+
 <section class="features">
 <div class="features-container">
 <h2 class="features-title">为什么选择 30see?</h2>
@@ -316,10 +317,16 @@ font-size: 2rem;
 </div>
 </div>
 </section>
- 
+
 <footer>
 <img src="images/logo.png" alt="30see Logo" class="footer-logo">
 <p class="footer-text">© 2026 30see. All rights reserved.</p>
 </footer>
+
+<script>
+if (typeof StatsAPI !== 'undefined') {
+    StatsAPI.incrementVisit('index');
+}
+</script>
 </body>
 </html>
