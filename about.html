@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于我们 - 30see.xyz 公益AI教育</title>
+<meta name="description" content="30see.xyz 是一个公益AI教育平台，致力于让每个人都能用上AI，学习新技能">
+<meta name="keywords" content="30see,公益AI,AI教育,AI学习,免费教程">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand-blue: #0066cc;
+  --brand-blue-light: #0099ff;
+  --brand-orange: #ff6600;
+  --brand-orange-light: #ff9933;
+  --brand-purple: #6a0dad;
+  --brand-red: #ff3333;
+  --dark-bg: #1a1a2e;
+  --dark-bg-light: #252542;
+  --white: #ffffff;
+  --off-white: #f0f4f8;
+  --light-gray: #e8ecf0;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a6a;
+  --text-muted: #7a7a9a;
+  --divider: #d0d8e4;
+  --highlight: #fff3d9;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+  background-color: var(--off-white);
+  color: var(--text-primary);
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+.site-header {
+  background: var(--dark-bg);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 3px solid var(--brand-blue);
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  color: var(--brand-blue-light);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+.logo span { color: var(--white); font-style: italic; font-weight: 400; }
+.header-badge {
+  background: var(--brand-blue);
+  color: var(--white);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-bg-light) 100%);
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 102, 204, 0.15) 0%, transparent 70%);
+  animation: pulse 8s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+.hero-label {
+  display: inline-block;
+  background: var(--brand-blue);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+.hero-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.3;
+  margin-bottom: 20px;
+}
+.hero-subtitle {
+  font-size: 1.12rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.9;
+}
+
+.section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+.section-tag {
+  display: inline-block;
+  border: 2px solid var(--brand-blue);
+  color: var(--brand-blue);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 3px;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 14px;
+}
+.section-lead {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  line-height: 1.9;
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+.mission-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 32px 28px;
+  border: 1px solid var(--divider);
+  transition: transform 0.25s, box-shadow 0.25s;
+  text-align: center;
+}
+.mission-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 102, 204, 0.12);
+}
+.mission-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  display: block;
+}
+.mission-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.mission-desc {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.story-section {
+  background: var(--white);
+  padding: 80px 40px;
+}
+.story-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.story-text {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 2;
+  margin-top: 32px;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+.value-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 28px 24px;
+  border: 1px solid var(--divider);
+  position: relative;
+  overflow: hidden;
+}
+.value-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--brand-blue);
+}
+.value-card:nth-child(2)::before { background: var(--brand-orange); }
+.value-card:nth-child(3)::before { background: var(--brand-purple); }
+.value-card:nth-child(4)::before { background: var(--brand-red); }
+.value-icon {
+  font-size: 2.2rem;
+  margin-bottom: 14px;
+  display: block;
+}
+.value-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+.value-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.stats-bar {
+  background: var(--dark-bg);
+  padding: 48px 40px;
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  flex-wrap: wrap;
+}
+.stat-item {
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  color: var(--brand-blue-light);
+  font-weight: 700;
+}
+.stat-label {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+.cta-section {
+  background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);
+  padding: 80px 40px;
+  text-align: center;
+}
+.cta-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+.cta-text {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.85);
+  max-width: 600px;
+  margin: 0 auto 32px;
+  line-height: 1.8;
+}
+.btn-primary {
+  background: var(--white);
+  color: var(--brand-blue);
+  border: none;
+  padding: 14px 32px;
+  border-radius: 6px;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+footer {
+  background: var(--dark-bg);
+  padding: 40px;
+  text-align: center;
+}
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--brand-blue-light);
+  margin-bottom: 10px;
+}
+.footer-logo span {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--divider);
+}
+.footer-tagline {
+  font-size: 0.85rem;
+  color: #6B6057;
+  margin-bottom: 24px;
+}
+.footer-links {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  color: #8A7F74;
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover {
+  color: var(--brand-blue-light);
+}
+.footer-copy {
+  margin-top: 28px;
+  font-size: 0.75rem;
+  color: #4A4138;
+}
+
+@media (max-width: 768px) {
+  .stats-bar { gap: 40px; }
+  .stat-num { font-size: 2.2rem; }
+  .section, .story-section, .cta-section { padding: 60px 24px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo">30see<span>.xyz</span></a>
+  <nav style="display:flex;gap:20px;align-items:center;">
+    <a href="courses.html" style="color:#8A7F74;font-size:.82rem;text-decoration:none;">所有课程</a>
+    <a href="relaxation.html" style="color:#8A7F74;font-size:.82rem;text-decoration:none;">放松效果</a>
+    <span class="header-badge">公益教育</span>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-label">关于 30see</span>
+    <h1 class="hero-title">用科技传递知识<br>用AI点亮未来</h1>
+    <p class="hero-subtitle">
+      30see.xyz 是一个公益AI教育平台，致力于让人人都能接触并学会使用AI工具。<br>
+      不论你身在何处，不论你背景如何，AI都可以成为你的老师。
+    </p>
+  </div>
+</section>
+
+<section class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">免费开放</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">3+</div>
+    <div class="stat-label">精品课程</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">学习可能</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-tag">我们的使命</div>
+  <h2 class="section-title">让AI教育触手可及</h2>
+  <p class="section-lead">我们相信，知识不应该被金钱和地域限制。AI时代，每个人都应该有机会学习新技能，提升自己。</p>
+
+  <div class="mission-grid">
+    <div class="mission-card">
+      <span class="mission-icon">🌍</span>
+      <h3 class="mission-title">普惠全民</h3>
+      <p class="mission-desc">所有课程完全免费，向所有人开放。无论你是在校学生、职场人士还是退休老人，都可以在这里学习。</p>
+    </div>
+    <div class="mission-card">
+      <span class="mission-icon">🤖</span>
+      <h3 class="mission-title">AI赋能</h3>
+      <p class="mission-desc">AI不是少数人的专利。我们教你如何用AI学习任何技能，让AI成为你的私人导师、写作助手、学习伙伴。</p>
+    </div>
+    <div class="mission-card">
+      <span class="mission-icon">💡</span>
+      <h3 class="mission-title">实用为王</h3>
+      <p class="mission-desc">不做空洞理论，只给实战技巧。每一门课程都注重实用，让你学完就能用，用了就有效果。</p>
+    </div>
+  </div>
+</section>
+
+<section class="story-section">
+  <div class="story-inner">
+    <div class="section-tag">我们的故事</div>
+    <h2 class="section-title">为什么创建30see？</h2>
+    <p class="story-text">
+      在AI飞速发展的今天，我们看到了太多人因为不懂AI而错失机会，也看到了太多人被AI焦虑所困扰。<br><br>
+      我们相信，AI应该是一个帮助每个人成长的工具，而不是少数人的特权。<br><br>
+      因此，我们创建了30see——一个公益AI教育平台。我们希望通过对AI工具的系统性教学，让更多人能够：<br><br>
+      学会用AI提升工作效率<br>
+      学会用AI学习新技能<br>
+      学会用AI解决实际问题<br><br>
+      知识从来不该是有门槛的特权。现在，AI让这一切成为可能。<br><br>
+      让我们一起，用AI点亮未来。
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-tag">核心价值观</div>
+  <h2 class="section-title">我们坚持什么</h2>
+
+  <div class="values-grid">
+    <div class="value-card">
+      <span class="value-icon">🎯</span>
+      <h3 class="value-title">专注实用</h3>
+      <p class="value-desc">只教真正有用的技能，不追求花哨而不实用的内容。</p>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">💚</span>
+      <h3 class="value-title">真诚开放</h3>
+      <p class="value-desc">所有内容完全免费，不做付费陷阱，不藏任何套路。</p>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">🔄</span>
+      <h3 class="value-title">持续迭代</h3>
+      <p class="value-desc">根据反馈不断完善，让课程越来越好用，越来越实用。</p>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">🤝</span>
+      <h3 class="value-title">共建共享</h3>
+      <p class="value-desc">欢迎所有人参与贡献，一起让AI教育惠及更多人。</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2 class="cta-title">准备好开始学习了吗？</h2>
+  <p class="cta-text">浏览我们的免费课程，开启你的AI学习之旅。让AI成为你成长路上的得力助手。</p>
+  <a href="courses.html" class="btn-primary">浏览所有课程 →</a>
+</section>
+
+<footer>
+  <div class="footer-logo">30see<span>.xyz</span></div>
+  <div class="footer-tagline">公益AI普惠教育 · 让每个人都能用上AI</div>
+  <div class="footer-links">
+    <a href="index.html">首页</a>
+    <a href="courses.html">所有课程</a>
+    <a href="about.html">关于我们</a>
+    <a href="#">参与贡献</a>
+  </div>
+  <div class="footer-copy">本项目内容遵循 CC BY-SA 4.0 协议，允许自由传播和改编，注明来源即可 · 30see.xyz</div>
+</footer>
+
+<script src="js/stats.js"></script>
+<script>
+if (typeof StatsAPI !== 'undefined' && typeof StatsAPI.incrementVisit === 'function') {
+  StatsAPI.incrementVisit('about');
+}
+</script>
+</body>
+</html>

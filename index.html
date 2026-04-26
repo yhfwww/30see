@@ -255,6 +255,25 @@ margin-bottom: 20px;
 opacity: 0.8;
 font-size: 0.9rem;
 }
+
+.footer-links {
+display: flex;
+gap: 24px;
+justify-content: center;
+flex-wrap: wrap;
+margin: 20px 0;
+}
+
+.footer-links a {
+color: rgba(255,255,255,0.6);
+text-decoration: none;
+font-size: 0.82rem;
+transition: color 0.2s;
+}
+
+.footer-links a:hover {
+color: var(--primary-blue-light);
+}
 @media (max-width: 768px) {
 .tagline {
 font-size: 2.2rem;
@@ -319,6 +338,12 @@ font-size: 2rem;
 
 <footer>
 <img src="images/logo.png" alt="30see Logo" class="footer-logo">
+<div class="footer-links">
+  <a href="index.html">首页</a>
+  <a href="courses.html">所有课程</a>
+  <a href="about.html">关于我们</a>
+  <a href="relaxation.html">放松效果</a>
+</div>
 <p class="footer-text">© 2026 30see. All rights reserved.</p>
 </footer>
 
