@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="与AI对话的艺术 - 提示词写作指南">
+<meta name="keywords" content="AI,提示词,教程,对话,写作">
+<title>与AI对话的艺术 · 提示词写作指南</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-blue: #0066cc;
+    --brand-blue-light: #0099ff;
+    --brand-orange: #ff6600;
+    --brand-orange-light: #ff9933;
+    --dark-bg: #1a1a2e;
+    --dark-bg-light: #252542;
+    --white: #ffffff;
+    --off-white: #f0f4f8;
+    --light-gray: #e8ecf0;
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a6a;
+    --text-muted: #7a7a9a;
+    --divider: #d0d8e4;
+    --code-bg: #1e1b16;
+    --code-text: #e8dcc8;
+    --good: #2d6a4f;
+    --bad: #c8401a;
+    --card: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--off-white);
+    color: var(--text-primary);
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ── Brand Header ── */
+  .brand-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-orange) 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .brand-nav a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .brand-nav a:hover {
+    color: #fff;
+  }
+
+  .brand-nav .btn {
+    background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .brand-nav .btn:hover {
+    background: linear-gradient(135deg, var(--brand-blue-light) 0%, var(--brand-blue) 100%);
+    color: #fff;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--dark-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,102,204,.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 20% 100%, rgba(255,102,0,.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .hero-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--brand-orange-light);
+    border: 1px solid rgba(255,153,51,.4);
+    padding: 6px 16px;
+    border-radius: 2px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    position: relative;
+    max-width: 800px;
+  }
+
+  .hero h1 span {
+    color: var(--brand-orange-light);
+  }
+
+  .hero-sub {
+    margin-top: 24px;
+    font-size: 1rem;
+    color: rgba(255,255,255,.6);
+    max-width: 580px;
+    position: relative;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 56px;
+    position: relative;
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+
+  .hero-stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--brand-orange-light);
+    display: block;
+  }
+
+  .hero-stat-label {
+    font-size: .8rem;
+    color: rgba(255,255,255,.45);
+    letter-spacing: 1px;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.3);
+    font-size: 12px;
+    letter-spacing: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.3), transparent);
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── Nav ── */
+  .toc {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(240,244,248,.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--divider);
+    padding: 0 24px;
+    overflow-x: auto;
+  }
+
+  .toc-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    white-space: nowrap;
+    padding: 12px 0;
+  }
+
+  .toc a {
+    font-size: .78rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 5px 12px;
+    border-radius: 20px;
+    transition: all .2s;
+    letter-spacing: .3px;
+  }
+
+  .toc a:hover {
+    background: var(--brand-blue);
+    color: #fff;
+  }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section {
+    padding: 80px 0;
+  }
+
+  section + section {
+    border-top: 1px solid var(--divider);
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--brand-orange);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .section-tag::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--brand-orange);
+  }
+
+  h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 16px;
+    line-height: 1.9;
+  }
+
+  /* ── Principle Cards ── */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .principle-card {
+    background: var(--card);
+    border: 1px solid var(--divider);
+    border-radius: 4px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+  }
+
+  .principle-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  }
+
+  .principle-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+
+  .principle-card.p1::before { background: var(--brand-blue); }
+  .principle-card.p2::before { background: var(--brand-orange); }
+  .principle-card.p3::before { background: var(--brand-blue-light); }
+  .principle-card.p4::before { background: #5b6ed4; }
+  .principle-card.p5::before { background: #c86e1a; }
+  .principle-card.p6::before { background: #1a8fa8; }
+
+  .principle-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--divider);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .principle-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+
+  .principle-card p {
+    font-size: .88rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
+    line-height: 1.7;
+  }
+
+  /* ── Comparison: Good vs Bad ── */
+  .compare-block {
+    margin: 32px 0;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--divider);
+  }
+
+  .compare-header {
+    background: var(--light-gray);
+    padding: 16px 24px;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    border-bottom: 1px solid var(--divider);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .compare-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 600px) {
+    .compare-cols { grid-template-columns: 1fr; }
+  }
+
+  .compare-side {
+    padding: 20px 22px;
+  }
+
+  .compare-side.bad {
+    background: #fff8f7;
+    border-right: 1px solid var(--divider);
+  }
+
+  .compare-side.good {
+    background: #f6faf8;
+  }
+
+  .compare-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .compare-label.bad-label { color: var(--bad); }
+  .compare-label.good-label { color: var(--good); }
+
+  .prompt-text {
+    font-family: 'Space Mono', monospace;
+    font-size: .82rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    background: rgba(0,0,0,.04);
+    padding: 12px 14px;
+    border-radius: 4px;
+    word-break: break-word;
+  }
+
+  .compare-side.bad .prompt-text {
+    border-left: 3px solid var(--bad);
+  }
+
+  .compare-side.good .prompt-text {
+    border-left: 3px solid var(--good);
+  }
+
+  .compare-explain {
+    margin-top: 10px;
+    font-size: .82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── Myth Boxes ── */
+  .myth-list {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .myth-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0;
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .myth-side {
+    background: #fff2ef;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 64px;
+    border-right: 1px solid var(--divider);
+  }
+
+  .myth-icon {
+    font-size: 1.6rem;
+  }
+
+  .myth-body {
+    padding: 18px 22px;
+    background: #fff;
+  }
+
+  .myth-title {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--bad);
+    margin-bottom: 6px;
+  }
+
+  .myth-truth {
+    font-size: .88rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .myth-truth strong {
+    color: var(--good);
+  }
+
+  /* ── Framework ── */
+  .framework-box {
+    background: var(--dark-bg);
+    color: #fff;
+    border-radius: 8px;
+    padding: 40px;
+    margin: 40px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .framework-box::after {
+    content: 'RISEN';
+    position: absolute;
+    right: -10px;
+    bottom: -20px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 8rem;
+    font-weight: 900;
+    color: rgba(255,255,255,.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .framework-box h3 {
+    color: var(--brand-orange-light);
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+
+  .framework-box p {
+    color: rgba(255,255,255,.6);
+    font-size: .9rem;
+    margin-bottom: 28px;
+  }
+
+  .risen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .risen-item {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 4px;
+    padding: 16px;
+  }
+
+  .risen-letter {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--brand-orange-light);
+    line-height: 1;
+  }
+
+  .risen-word {
+    font-size: .85rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 4px 0 6px;
+  }
+
+  .risen-desc {
+    font-size: .75rem;
+    color: rgba(255,255,255,.45);
+    line-height: 1.5;
+  }
+
+  /* ── Case Studies ── */
+  .case-block {
+    margin: 36px 0;
+    background: var(--card);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .case-header {
+    background: var(--light-gray);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .case-emoji {
+    font-size: 1.4rem;
+  }
+
+  .case-title {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .case-scene {
+    font-size: .78rem;
+    color: var(--text-muted);
+    margin-left: auto;
+    font-style: italic;
+  }
+
+  .case-body {
+    padding: 24px;
+  }
+
+  .case-body .step {
+    margin-bottom: 16px;
+  }
+
+  .step-label {
+    font-family: 'Space Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .case-result {
+    background: #f0f7f4;
+    border-left: 3px solid var(--good);
+    padding: 12px 16px;
+    border-radius: 0 4px 4px 0;
+    font-size: .88rem;
+    color: #2a4a3a;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* ── Tip callouts ── */
+  .tip-box {
+    background: #fffbf0;
+    border: 1px solid #f0d98a;
+    border-left: 4px solid var(--brand-orange);
+    padding: 16px 20px;
+    border-radius: 0 4px 4px 0;
+    margin: 24px 0;
+    font-size: .9rem;
+    color: #4a3d1a;
+    line-height: 1.7;
+  }
+
+  .tip-box strong { color: #7a5a10; }
+
+  .warn-box {
+    background: #fff8f6;
+    border: 1px solid #f0c0b0;
+    border-left: 4px solid var(--brand-red);
+    padding: 16px 20px;
+    border-radius: 0 4px 4px 0;
+    margin: 24px 0;
+    font-size: .9rem;
+    color: #4a1a10;
+    line-height: 1.7;
+  }
+
+  /* ── Formula strips ── */
+  .formula {
+    background: var(--dark-bg);
+    color: var(--brand-orange-light);
+    font-family: 'Space Mono', monospace;
+    font-size: .9rem;
+    padding: 18px 24px;
+    border-radius: 4px;
+    margin: 20px 0;
+    letter-spacing: .5px;
+    line-height: 1.6;
+  }
+
+  /* ── Cheatsheet ── */
+  .cheatsheet {
+    background: var(--dark-bg);
+    border-radius: 8px;
+    padding: 40px;
+    margin-top: 40px;
+    color: #fff;
+  }
+
+  .cheatsheet h3 {
+    color: var(--brand-orange-light);
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+  }
+
+  .cheatsheet-sub {
+    color: rgba(255,255,255,.5);
+    font-size: .85rem;
+    margin-bottom: 28px;
+  }
+
+  .cs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .cs-item {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 4px;
+    padding: 16px;
+  }
+
+  .cs-item .cs-label {
+    font-size: .7rem;
+    letter-spacing: 2px;
+    color: var(--brand-orange-light);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .cs-item .cs-text {
+    font-size: .83rem;
+    color: rgba(255,255,255,.7);
+    line-height: 1.6;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    background: var(--dark-bg);
+    color: rgba(255,255,255,.4);
+    padding: 48px 24px;
+    font-size: .8rem;
+    line-height: 2;
+  }
+
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .footer p {
+    font-size: 13px;
+    max-width: 400px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .footer-nav {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .footer-nav a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 13px;
+  }
+
+  .footer-nav a:hover {
+    color: #fff;
+  }
+
+  .footer-right {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    text-align: right;
+  }
+
+  /* ── Misc ── */
+  .divider {
+    width: 48px;
+    height: 3px;
+    background: var(--brand-orange);
+    margin: 20px 0 32px;
+  }
+
+  .tag-inline {
+    display: inline-block;
+    font-size: .72rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    border: 1px solid;
+    vertical-align: middle;
+    margin: 0 2px;
+  }
+
+  .tag-good { color: var(--good); border-color: var(--good); background: #f0f9f4; }
+  .tag-bad  { color: var(--bad);  border-color: var(--bad);  background: #fff0ed; }
+
+  .numbered-steps {
+    counter-reset: steps;
+    list-style: none;
+    margin: 24px 0;
+  }
+
+  .numbered-steps li {
+    counter-increment: steps;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .numbered-steps li::before {
+    content: counter(steps);
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: .85rem;
+    color: var(--brand-blue);
+    background: #f0f7ff;
+    border: 1px solid var(--brand-blue);
+    border-radius: 2px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .numbered-steps li p {
+    margin: 0;
+    font-size: .95rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .brand-header {
+      padding: 16px 24px;
+    }
+    
+    .hero {
+      padding: 120px 24px 60px;
+    }
+    
+    .hero-stats {
+      gap: 24px;
+    }
+    
+    .container {
+      padding: 0 24px;
+    }
+    
+    section {
+      padding: 60px 0;
+    }
+    
+    .footer-inner {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .footer-right {
+      text-align: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ BRAND HEADER ══════════════════ -->
+<header class="brand-header">
+  <a href="index.html" class="brand-logo">
+    <div class="logo-icon">30</div>
+    <span class="logo-text">30see</span>
+  </a>
+  <nav class="brand-nav">
+    <a href="index.html">首页</a>
+    <a href="courses.html">课程</a>
+    <a href="relaxation.html">放松效果</a>
+    <a href="index.html" class="btn">返回主页</a>
+  </nav>
+</header>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-badge">普通人的 AI 使用指南</div>
+  <h1>与 AI 对话的<span>艺术</span></h1>
+  <p class="hero-sub">提示词不是魔法咒语，而是一种沟通技巧。学会它，让 AI 真正为你所用。</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num">6</span>
+      <span class="hero-stat-label">核心原则</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">6+</span>
+      <span class="hero-stat-label">真实案例</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">8</span>
+      <span class="hero-stat-label">常见误区</span>
+    </div>
+  </div>
+  <div class="scroll-hint">向下探索</div>
+</section>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#why">为什么</a>
+    <a href="#principles">六大原则</a>
+    <a href="#framework">RISEN框架</a>
+    <a href="#cases">真实案例</a>
+    <a href="#myths">纠正误区</a>
+    <a href="#advanced">进阶技巧</a>
+    <a href="#cheatsheet">速查表</a>
+  </div>
+</nav>
+
+<!-- ══════════════════ WHY ══════════════════ -->
+<section id="why">
+  <div class="container">
+    <div class="section-tag">出发点</div>
+    <h2>同样的 AI，为什么有人用得如鱼得水？</h2>
+    <div class="divider"></div>
+    <p>哈佛大学信息技术部门的研究表明：<strong>提示词的质量直接决定 AI 输出的质量。</strong>同一个问题，换一种问法，结果可能天差地别。</p>
+    <p>这不是玄学，也不需要你懂技术。本质上，和 AI 对话就像和一个<em>极度字面的、没有默认背景知识的新同事</em>沟通——你给得越清晰，它回报你越精准。</p>
+    <div class="compare-block">
+      <div class="compare-header">⚡ 同一个需求，两种写法，两种结果</div>
+      <div class="compare-cols">
+        <div class="compare-side bad">
+          <div class="compare-label bad-label">✗ 模糊写法</div>
+          <div class="prompt-text">帮我写邮件</div>
+          <div class="compare-explain">AI 不知道：写给谁？什么事？什么语气？多长？结果大概率是废话连篇的模板。</div>
+        </div>
+        <div class="compare-side good">
+          <div class="compare-label good-label">✓ 清晰写法</div>
+          <div class="prompt-text">帮我写一封向客户道歉的邮件。背景：我们延误了2周交付，客户是B2B老客户，语气要真诚但专业，不超过150字，末尾提供补偿方案。</div>
+          <div class="compare-explain">AI 获得了所有关键信息：对象、背景、语气、长度、结构——直接可用。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ PRINCIPLES ══════════════════ -->
+<section id="principles">
+  <div class="container">
+    <div class="section-tag">核心方法论</div>
+    <h2>六大黄金原则</h2>
+    <div class="divider"></div>
+    <p>来自哈佛、MIT、斯坦福等机构的实践研究，提炼出这六条在任何 AI 工具上都普遍有效的原则。</p>
+
+    <div class="principles-grid">
+      <div class="principle-card p1">
+        <div class="principle-num">01</div>
+        <h3>指定角色与身份</h3>
+        <p>告诉 AI「以 X 的身份回答」，它会调整知识结构和语气。「作为资深营销总监」与「作为初级员工」给出的建议完全不同。</p>
+      </div>
+      <div class="principle-card p2">
+        <div class="principle-num">02</div>
+        <h3>提供足够的背景</h3>
+        <p>你的处境、限制条件、已有的信息——AI 无法读心，把它需要知道的都告诉它。背景越丰富，回答越精准。</p>
+      </div>
+      <div class="principle-card p3">
+        <div class="principle-num">03</div>
+        <h3>明确输出格式</h3>
+        <p>要列表还是段落？要多少字？要几个方案？要表格还是要步骤？明确说出来，避免 AI 自由发挥。</p>
+      </div>
+      <div class="principle-card p4">
+        <div class="principle-num">04</div>
+        <h3>像对话一样迭代</h3>
+        <p>第一次不满意？不要重新开始，直接说「把第二段改得更简洁一些」「语气再正式一点」。把它当协作同事。</p>
+      </div>
+      <div class="principle-card p5">
+        <div class="principle-num">05</div>
+        <h3>给出例子</h3>
+        <p>「类似这种风格：……」「避免像这样：……」例子是最高效的沟通方式，比任何形容词都精确。</p>
+      </div>
+      <div class="principle-card p6">
+        <div class="principle-num">06</div>
+        <h3>拆分复杂任务</h3>
+        <p>不要把一个复杂需求塞进一个提示。拆成小步骤，逐步完成。就像不会一口气吃下整桌饭。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FRAMEWORK ══════════════════ -->
+<section id="framework">
+  <div class="container">
+    <div class="section-tag">实用框架</div>
+    <h2>RISEN：万能提示词框架</h2>
+    <div class="divider"></div>
+    <p>当你不知道从哪里下手，用 RISEN 框架来结构化你的提示词。不必每次五项全用，但用得越多，结果越好。</p>
+
+    <div class="framework-box">
+      <h3>RISEN 框架</h3>
+      <p>五个维度，帮你系统构建一个高质量提示词</p>
+      <div class="risen-grid">
+        <div class="risen-item">
+          <div class="risen-letter">R</div>
+          <div class="risen-word">Role · 角色</div>
+          <div class="risen-desc">你希望 AI 扮演什么专家或身份？</div>
+        </div>
+        <div class="risen-item">
+          <div class="risen-letter">I</div>
+          <div class="risen-word">Instruction · 指令</div>
+          <div class="risen-desc">核心任务是什么？要做什么？</div>
+        </div>
+        <div class="risen-item">
+          <div class="risen-letter">S</div>
+          <div class="risen-word">Steps · 步骤</div>
+          <div class="risen-desc">有没有特定的执行顺序或方法？</div>
+        </div>
+        <div class="risen-item">
+          <div class="risen-letter">E</div>
+          <div class="risen-word">End Goal · 目标</div>
+          <div class="risen-desc">最终要达成什么效果？</div>
+        </div>
+        <div class="risen-item">
+          <div class="risen-letter">N</div>
+          <div class="risen-word">Narrowing · 约束</div>
+          <div class="risen-desc">有哪些限制？字数、风格、禁忌？</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>RISEN 实战示范</h3>
+    <div class="compare-block">
+      <div class="compare-header">📝 场景：为创业公司写一段简介</div>
+      <div class="compare-cols">
+        <div class="compare-side bad">
+          <div class="compare-label bad-label">✗ 没用框架</div>
+          <div class="prompt-text">给我写公司介绍</div>
+          <div class="compare-explain">缺少所有信息，AI 只能乱猜，输出完全无法用。</div>
+        </div>
+        <div class="compare-side good">
+          <div class="compare-label good-label">✓ 用了RISEN</div>
+          <div class="prompt-text">
+[角色] 你是一位擅长科技品牌叙事的文案总监<br>
+[指令] 为我的AI设计工具公司写一段官网首屏简介<br>
+[目标] 吸引设计师和产品经理了解并注册试用<br>
+[背景] 产品名叫"SketchMind"，核心功能是用AI将手绘草图转成可编辑的UI原型<br>
+[约束] 80字以内，语气现代、克制，不用"革命性""颠覆"等词
+          </div>
+          <div class="compare-explain">AI 有完整信息，可以直接输出高质量文案。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ CASES ══════════════════ -->
+<section id="cases">
+  <div class="container">
+    <div class="section-tag">真实案例</div>
+    <h2>6 个场景，拿来就用</h2>
+    <div class="divider"></div>
+    <p>以下是日常生活中最常见的 AI 使用场景。每个案例都包含具体的提示词写法，可以直接复制修改使用。</p>
+
+    <!-- Case 1 -->
+    <div class="case-block">
+      <div class="case-header">
+        <span class="case-emoji">💼</span>
+        <span class="case-title">职场写作：让 AI 帮你写一封难以开口的邮件</span>
+        <span class="case-scene">上班族必备</span>
+      </div>
+      <div class="case-body">
+        <div class="step">
+          <div class="step-label">提示词</div>
+          <div class="prompt-text">你是一位有15年经验的职场沟通顾问。帮我写一封邮件，向上司申请推迟项目截止日期。背景：原定周五交付，但我们发现了一个影响核心功能的技术bug，需要额外3天修复。邮件要：①简洁说明原因②体现我们的责任心③给出新的时间节点④不超过200字⑤语气专业但不卑微。</div>
+        </div>
+        <div class="case-result">
+          💡 关键在于"体现责任心"和"不卑微"这两个约束——这会让 AI 避免写出过度道歉或推卸责任的版本。
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="case-block">
+      <div class="case-header">
+        <span class="case-emoji">📚</span>
+        <span class="case-title">学习辅助：快速理解复杂概念</span>
+        <span class="case-scene">学生 / 自学者</span>
+      </div>
+      <div class="case-body">
+        <div class="step">
+          <div class="step-label">提示词</div>
+          <div class="prompt-text">用我完全没有金融背景的前提下，用生活化的比喻解释"量化宽松"（QE）是什么。要求：①先用一句话给出核心定义②再用一个日常生活场景打比方③最后说明它对普通人的实际影响，用一个真实案例。全文不超过300字。</div>
+        </div>
+        <div class="case-result">
+          💡 "完全没有金融背景"这个约束至关重要——它告诉 AI 调整解释的深度，避免专业术语堆砌。
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="case-block">
+      <div class="case-header">
+        <span class="case-emoji">🍳</span>
+        <span class="case-title">生活助手：根据冰箱现有食材推荐食谱</span>
+        <span class="case-scene">日常生活</span>
+      </div>
+      <div class="case-body">
+        <div class="step">
+          <div class="step-label">提示词（哈佛角色扮演法）</div>
+          <div class="prompt-text">你是我的私人营养师兼厨师。我冰箱里有：鸡蛋3个、西红柿2个、豆腐1块、葱、剩米饭。要求：①推荐2道可以在30分钟内做完的家常菜②每道菜给出简单步骤③其中一道要低卡（适合减脂）。</div>
+        </div>
+        <div class="case-result">
+          💡 "私人营养师兼厨师"的角色设定让 AI 同时考虑营养和烹饪两个维度，比单纯问"怎么做菜"更全面。
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 4 -->
+    <div class="case-block">
+      <div class="case-header">
+        <span class="case-emoji">🔍</span>
+        <span class="case-title">分析决策：买房还是租房？帮我理清思路</span>
+        <span class="case-scene">重大决策辅助</span>
+      </div>
+      <div class="case-body">
+        <div class="step">
+          <div class="step-label">提示词（分步骤拆解法）</div>
+          <div class="prompt-text">我需要你帮我分析"买房vs租房"的决策框架。我的情况：27岁，月收入2万，所在城市均价5万/㎡，目前有存款50万，未来3年内可能换城市工作。请按以下步骤回答：①列出买房的核心优势（仅限与我情况相关的）②列出租房的核心优势③给出一个客观的评估结论④最后问我还需要哪些信息帮助做最终决定。</div>
+        </div>
+        <div class="case-result">
+          💡 "按以下步骤"是最高效的结构化提示——你替 AI 规划了思路，它就不会东拉西扯。最后的"问我问题"让对话持续深入。
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 5 -->
+    <div class="case-block">
+      <div class="case-header">
+        <span class="case-emoji">✍️</span>
+        <span class="case-title">创意写作：用 AI 帮你克服写作空白焦虑</span>
+        <span class="case-scene">内容创作者</span>
+      </div>
+      <div class="case-body">
+        <div class="step">
+          <div class="step-label">提示词</div>
+          <div class="prompt-text">我正在写一篇关于"独居生活"的个人随笔，目标读者是25-35岁的城市年轻人。目前卡在开头。请给我3种不同风格的开头段落（每个约80字）：①温柔诗意风②幽默自嘲风③犀利观察风。我会选一个继续写。</div>
+        </div>
+        <div class="case-result">
+          💡 同时要求"3种不同风格"是绝妙技巧——你不是让 AI 替你写，而是让它提供选择。保留你的主导权，AI 是你的草稿机。
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 6 -->
+    <div class="case-block">
+      <div class="case-header">
+        <span class="case-emoji">💬</span>
+        <span class="case-title">沟通辅助：如何说一件很难开口的事？</span>
+        <span class="case-scene">人际关系</span>
+      </div>
+      <div class="case-body">
+        <div class="step">
+          <div class="step-label">提示词</div>
+          <div class="prompt-text">帮我想想如何向我最好的朋友开口，说我需要拒绝参加他的婚礼。原因：我负担不起从北京飞到纽约的机票和礼金，但又不想让他觉得我不在乎他的婚礼。请给我：①一个真诚表达方案（包括大概怎么说）②可能他会产生的误解以及我可以怎么提前应对。</div>
+        </div>
+        <div class="case-result">
+          💡 AI 在敏感的人际沟通上非常有帮助——它不会评判你，会给出成熟、周到的建议。关键是把背景和顾虑都说清楚。
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>💡 万能追问句式：</strong>收到回复后，可以用这些句子继续优化——<br>
+      「把第 X 点展开讲讲」「换一种更简洁的表达」「如果我是 [某种身份]，你会怎么建议？」「给我一个反对意见」「假设我没有时间，最重要的一条是什么？」
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ MYTHS ══════════════════ -->
+<section id="myths">
+  <div class="container">
+    <div class="section-tag">纠正认知</div>
+    <h2>8 个最常见的错误与误区</h2>
+    <div class="divider"></div>
+    <p>很多人用了 AI 很久却收效甚微，往往是陷入了以下误区。认清它们，马上改进。</p>
+
+    <div class="myth-list">
+
+      <div class="myth-item">
+        <div class="myth-side"><div class="myth-icon">🙅</div></div>
+        <div class="myth-body">
+          <div class="myth-title">误区一：问题越短越好，越"高效"</div>
+          <div class="myth-truth">与搜索引擎不同，AI 需要上下文才能给出精准答案。短小精悍的提示词往往换来冗长废话。<strong>正确做法：给足背景，不怕啰嗦。</strong>用一两分钟写清楚，省去后续反复修改的时间。</div>
+        </div>
+      </div>
+
+      <div class="myth-item">
+        <div class="myth-side"><div class="myth-icon">🤖</div></div>
+        <div class="myth-body">
+          <div class="myth-title">误区二：AI 第一次回复就应该完美</div>
+          <div class="myth-truth">没有任何专业工具开箱即用就是满分。AI 也一样。<strong>正确做法：把它当成可以多次修改的草稿，告诉它哪里不对、怎么改。</strong>迭代才是正确的使用姿势。</div>
+        </div>
+      </div>
+
+      <div class="myth-item">
+        <div class="myth-side"><div class="myth-icon">📋</div></div>
+        <div class="myth-body">
+          <div class="myth-title">误区三：直接复制 AI 回复，不加甄别</div>
+          <div class="myth-truth">AI 会"幻觉"——自信地给出错误信息，尤其是具体数据、引用、时间节点。<strong>正确做法：涉及事实的内容必须交叉验证。</strong>把 AI 当助手，不是当权威。</div>
+        </div>
+      </div>
+
+      <div class="myth-item">
+        <div class="myth-side"><div class="myth-icon">🪄</div></div>
+        <div class="myth-body">
+          <div class="myth-title">误区四：找到"神奇提示词"就能一劳永逸</div>
+          <div class="myth-truth">网上流传的各种"超级提示词"往往在特定场景有效，但并无普适魔法。<strong>正确做法：理解原则，根据具体场景灵活组合，</strong>而不是套模板。</div>
+        </div>
+      </div>
+
+      <div class="myth-item">
+        <div class="myth-side"><div class="myth-icon">😶</div></div>
+        <div class="myth-body">
+          <div class="myth-title">误区五：不说"受众是谁"</div>
+          <div class="myth-truth">写给小学生的解释和写给专业人士的解释，完全不同。不告诉 AI 受众，它会使用模糊中间值。<strong>正确做法：总是指明「目标读者是……」「面向……的人」。</strong></div>
+        </div>
+      </div>
+
+      <div class="myth-item">
+        <div class="myth-side"><div class="myth-icon">📏</div></div>
+        <div class="myth-body">
+          <div class="myth-title">误区六：不限制长度和格式</div>
+          <div class="myth-truth">AI 默认倾向于冗长、面面俱到。如果你不说，它可能给你写一篇论文。<strong>正确做法：明确说「不超过200字」「用3个要点」「用表格呈现」。</strong></div>
+        </div>
+      </div>
+
+      <div class="myth-item">
+        <div class="myth-side"><div class="myth-icon">🔒</div></div>
+        <div class="myth-body">
+          <div class="myth-title">误区七：不敢告诉 AI"这个不好，重写"</div>
+          <div class="myth-truth">很多人第一次不满意就放弃了。AI 不会因为被批评而生气。<strong>正确做法：直接说「这个太啰嗦，重写一版」「语气太正式了，轻松一点」。</strong>它会照单全收。</div>
+        </div>
+      </div>
+
+      <div class="myth-item">
+        <div class="myth-side"><div class="myth-icon">💭</div></div>
+        <div class="myth-body">
+          <div class="myth-title">误区八：问封闭式问题，错失 AI 真正的价值</div>
+          <div class="myth-truth">「XXX 是对的吗？」这类问题只能得到 Yes/No。AI 最大的价值在于帮你思考你没想到的维度。<strong>正确做法：问开放式问题——「关于 XXX，我可能没考虑到哪些风险？」</strong></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="warn-box">
+      ⚠️ <strong>特别提醒：</strong>AI 不擅长的事情——最新实时新闻、精确计算（尤其是复杂数学）、法律医疗等需要专业执照的建议、你的私人数据记忆（每次对话是独立的）。在这些领域，请寻求专业渠道。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ADVANCED ══════════════════ -->
+<section id="advanced">
+  <div class="container">
+    <div class="section-tag">进阶技巧</div>
+    <h2>让输出质量再上一个台阶</h2>
+    <div class="divider"></div>
+
+    <h3>① 让 AI 向你提问</h3>
+    <p>不知道自己需要什么背景信息？先让 AI 主导信息收集。</p>
+    <div class="formula">提示词公式：我想让你帮我做 [任务]，但在开始之前，请先向我提3-5个你认为必要的问题，以便给出最准确的答案。</div>
+
+    <h3>② 让 AI 扮演魔鬼辩护人</h3>
+    <p>检验你的方案、文章、决策是否有盲点。</p>
+    <div class="formula">提示词公式：以下是我的计划/观点：[内容]。请你扮演一个严格的批评者，找出其中最薄弱的3个环节，并说明为什么它们可能失败。</div>
+
+    <h3>③ 链式思考（让 AI 说出思考过程）</h3>
+    <p>对于复杂问题，要求 AI 展示推理过程，防止跳步骤得出错误结论。</p>
+    <div class="formula">提示词公式：请一步一步地分析这个问题，在给出最终结论前，先展示你的推理过程。</div>
+
+    <h3>④ 给出正反例（Few-shot 提示）</h3>
+    <p>比任何形容词都精确的沟通方式：直接展示你想要的和不想要的样本。</p>
+    <div class="compare-block">
+      <div class="compare-header">📌 给出例子 vs 仅用形容词描述</div>
+      <div class="compare-cols">
+        <div class="compare-side bad">
+          <div class="compare-label bad-label">✗ 仅用形容词</div>
+          <div class="prompt-text">写一条小红书文案，要活泼、有感染力、年轻化</div>
+          <div class="compare-explain">"活泼""年轻化"对每个人意味着不同的东西。</div>
+        </div>
+        <div class="compare-side good">
+          <div class="compare-label good-label">✓ 给出例子</div>
+          <div class="prompt-text">写一条咖啡馆的小红书文案，风格类似这个例子："今天不想上班只想坐在这里发呆☕ 阳光、拿铁、一本书，人间值得系列第99天"。帮我写一条同风格的，主题是周末早晨。</div>
+          <div class="compare-explain">例子比任何形容词都清晰。AI 能直接对齐你的审美。</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>⑤ 设定"不要做"的边界</h3>
+    <p>约束 AI 的禁区，有时候比告诉它做什么更重要。</p>
+    <div class="formula">实用禁令词：「不要用专业术语」「不要给我建议，只帮我列出选项」「不要问我问题，直接生成」「不要重复我刚才说过的话」「避免使用'当然''当然可以'这类废话开头」</div>
+
+    <ol class="numbered-steps">
+      <li><p><strong>先问 AI「你需要什么信息？」</strong>——适合复杂任务，让 AI 主导信息收集，避免你想不到某个关键细节。</p></li>
+      <li><p><strong>要求生成多个版本</strong>——「给我3个不同方向的方案」，然后你来选最适合的或者融合它们。</p></li>
+      <li><p><strong>用「继续」保持深度</strong>——「在第X点上继续深入」「把这个展开成一篇完整的文章」</p></li>
+      <li><p><strong>要求 AI 自我检查</strong>——在复杂任务结束后加一句：「检查一下你的回答有没有遗漏或矛盾之处」</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ══════════════════ CHEATSHEET ══════════════════ -->
+<section id="cheatsheet">
+  <div class="container">
+    <div class="section-tag">速查工具</div>
+    <h2>提示词速查表</h2>
+    <div class="divider"></div>
+    <p>收藏这张表，遇到不同场景时直接套用。</p>
+
+    <div class="cheatsheet">
+      <h3>📋 通用提示词模板库</h3>
+      <p class="cheatsheet-sub">根据你的需求选择对应模板，填入方括号中的内容即可</p>
+      <div class="cs-grid">
+        <div class="cs-item">
+          <div class="cs-label">解释概念</div>
+          <div class="cs-text">用[完全没有X背景的人]能理解的方式解释[概念]。用一个生活中的比喻，不超过[N]字。</div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-label">写作辅助</div>
+          <div class="cs-text">以[角色]身份，为[受众]写[文体]。语气[要求]，长度[约束]，核心传递[信息]。</div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-label">分析决策</div>
+          <div class="cs-text">分析[情况]的利弊。我的背景：[信息]。请列出支持和反对的前3个理由，然后给出建议。</div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-label">头脑风暴</div>
+          <div class="cs-text">围绕[主题]给我[N]个创意/想法。要求多样化，覆盖不同方向。先不用解释，列表给我。</div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-label">校对润色</div>
+          <div class="cs-text">帮我润色以下文字：[粘贴文本]。保留原意和我的写作风格，只改语法错误和awkward表达。</div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-label">总结提炼</div>
+          <div class="cs-text">将以下内容总结为[N]个核心要点：[粘贴内容]。用简洁的语言，每点不超过30字。</div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-label">角色扮演</div>
+          <div class="cs-text">你是[专业角色]。我是[你的身份]。我要[场景/问题]，请从你的专业角度给出建议。</div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-label">批判检验</div>
+          <div class="cs-text">以下是我的[计划/观点]：[内容]。请找出其中最薄弱的环节，并告诉我如何改进。</div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-label">学习路径</div>
+          <div class="cs-text">我想在[N周]内学会[技能]，我目前的水平是[描述]。请给我一个每周的学习计划。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box" style="margin-top: 40px;">
+      <strong>🎯 记住最重要的一条：</strong>和 AI 对话不是提交表单，而是对话。如果第一次不满意，就继续说话——「这个不够好，因为……重试」。迭代能力比第一次的提示词质量更重要。好的结果是谈出来的，不是猜出来的。
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-title">30see</div>
+      <p>内容创作者的数字工作室。基于哈佛、MIT等机构的研究成果，为普通人提供实用的AI使用指南。</p>
+      <div class="footer-nav">
+        <a href="index.html">首页</a>
+        <a href="courses.html">课程</a>
+        <a href="relaxation.html">放松效果</a>
+      </div>
+    </div>
+    <div class="footer-right">
+      <div style="margin-bottom:4px;">与 AI 对话的艺术</div>
+      <div style="color: rgba(255,255,255,0.4);">© 2026 30see</div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/stats.js"></script>
+<script>
+if (typeof StatsAPI !== 'undefined') {
+    StatsAPI.incrementVisit('ai-prompt-guide');
+}
+</script>
+
+</body>
+</html>
