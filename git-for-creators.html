@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git 创作者指南 — 写作人的版本控制</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-blue: #0066cc;
+    --brand-blue-light: #0099ff;
+    --brand-orange: #ff6600;
+    --brand-orange-light: #ff9933;
+    --brand-purple: #6a0dad;
+    --brand-red: #ff3333;
+    --dark-bg: #1a1a2e;
+    --dark-bg-light: #252542;
+    --white: #ffffff;
+    --off-white: #f0f4f8;
+    --light-gray: #e8ecf0;
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a6a;
+    --text-muted: #7a7a9a;
+    --divider: #d0d8e4;
+    --code-bg: #e8ecf0;
+    --highlight: #fff3d9;
+    --success: #28a745;
+    --warning: #e6a23c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--off-white);
+    color: var(--text-primary);
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 400;
+    line-height: 1.85;
+    font-size: 16px;
+  }
+
+  /* ── HEADER / MASTHEAD ── */
+  .masthead {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #2d2d5a 100%);
+    color: var(--white);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .masthead-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 120px 40px 70px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .masthead-label {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-orange-light);
+    margin-bottom: 28px;
+    display: block;
+  }
+
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 6.4vw, 72px);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+    color: #fff;
+  }
+
+  .masthead h1 em {
+    font-style: italic;
+    color: var(--brand-orange-light);
+  }
+
+  .masthead-sub {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.75);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  .masthead-meta {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .meta-dot {
+    width: 4px; height: 4px;
+    background: var(--brand-orange);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* Background texture */
+  .masthead::before {
+    content: 'GIT';
+    position: absolute;
+    right: -20px;
+    bottom: -40px;
+    font-family: 'Playfair Display', serif;
+    font-size: 320px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── NAV ── */
+  .toc-bar {
+    border-bottom: 1px solid var(--divider);
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+
+  .toc-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .toc-inner::-webkit-scrollbar { display: none; }
+
+  .toc-link {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 14px 16px;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+
+  .toc-link:hover {
+    color: var(--brand-blue);
+    border-bottom-color: var(--brand-blue);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--divider);
+  }
+
+  .section-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);
+    border-radius: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.25);
+  }
+
+  .section-badge .badge-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .section-badge .badge-label {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 0.1em;
+    margin-top: 2px;
+  }
+
+  .section-title-group {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .section-title-group .section-label {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brand-orange);
+    margin-bottom: 6px;
+    display: block;
+    font-weight: 600;
+  }
+
+  .section-title-group h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 3.5vw, 30px);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 40px 0 14px;
+    letter-spacing: 0.01em;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    max-width: 700px;
+  }
+
+  /* ── PULL QUOTE ── */
+  .pullquote {
+    border-left: 4px solid var(--brand-blue);
+    margin: 40px 0;
+    padding: 20px 32px;
+    background: linear-gradient(90deg, rgba(0,102,204,0.04) 0%, transparent 100%);
+  }
+
+  .pullquote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1.55;
+    color: var(--text-primary);
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .pullquote cite {
+    display: block;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-top: 12px;
+    font-style: normal;
+  }
+
+  /* ── ANALOGY BOX ── */
+  .analogy-box {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #2d2d5a 100%);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 36px 40px;
+    margin: 40px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .analogy-box::before {
+    content: '比喻';
+    position: absolute;
+    top: -10px;
+    right: 24px;
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.04);
+  }
+
+  .analogy-box .analogy-label {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--brand-orange-light);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .analogy-box p {
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  /* ── CONCEPT GRID ── */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2px;
+    margin: 40px 0;
+    border: 1px solid var(--divider);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .concept-card {
+    padding: 28px 30px;
+    background: var(--white);
+    border: none;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+
+  .concept-card:hover { 
+    background: #f8faff; 
+    box-shadow: inset 0 0 0 1px var(--brand-blue);
+  }
+
+  .concept-term {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--brand-blue);
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .concept-zh {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .concept-card p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  /* ── STEP LIST ── */
+  .step-list {
+    counter-reset: steps;
+    margin: 40px 0;
+  }
+
+  .step {
+    counter-increment: steps;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 20px;
+    align-items: start;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .step:last-child { border-bottom: none; margin-bottom: 0; }
+
+  .step-num {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);
+    color: var(--white);
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+    border-radius: 8px;
+  }
+
+  .step-content h4 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .step-content p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0 0 10px;
+    max-width: 100%;
+  }
+
+  /* ── CODE ── */
+  .code-block {
+    background: var(--dark-bg);
+    border: 1px solid #3a3a5c;
+    border-left: 4px solid var(--brand-blue);
+    padding: 20px 24px;
+    margin: 16px 0 20px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #e0e6f0;
+    overflow-x: auto;
+    border-radius: 0 8px 8px 0;
+    position: relative;
+  }
+
+  .code-comment {
+    color: #8a8ab0;
+    font-style: italic;
+  }
+
+  .code-label {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: #6a6a8a;
+    text-transform: uppercase;
+  }
+
+  code {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.88em;
+    background: rgba(0,102,204,0.08);
+    border: 1px solid rgba(0,102,204,0.2);
+    padding: 2px 7px;
+    color: var(--brand-blue-light);
+    border-radius: 3px;
+  }
+
+  /* ── WORKFLOW DIAGRAM ── */
+  .workflow {
+    margin: 40px 0;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .wf-step {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #2d2d5a 100%);
+    color: var(--white);
+    padding: 14px 22px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-align: center;
+    position: relative;
+    flex-shrink: 0;
+    border-radius: 6px;
+  }
+
+  .wf-step .wf-sub {
+    font-size: 10px;
+    color: var(--brand-orange-light);
+    letter-spacing: 0.08em;
+    display: block;
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  .wf-arrow {
+    font-size: 20px;
+    color: var(--text-muted);
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── TOOL CARDS ── */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin: 36px 0;
+  }
+
+  .tool-card {
+    border: 1px solid var(--divider);
+    padding: 28px;
+    background: var(--white);
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+    border-radius: 8px;
+  }
+
+  .tool-card:hover {
+    border-color: var(--brand-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,102,204,0.12);
+  }
+
+  .tool-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .tool-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .tool-tag {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .tool-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight-box {
+    background: linear-gradient(90deg, rgba(255,153,51,0.08) 0%, rgba(255,153,51,0.03) 100%);
+    border: 1px solid rgba(255,102,0,0.25);
+    padding: 24px 30px;
+    margin: 30px 0;
+    border-radius: 8px;
+  }
+
+  .highlight-box .hb-label {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-orange);
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 500;
+  }
+
+  .highlight-box p {
+    font-size: 15px;
+    color: var(--text-primary);
+    max-width: 100%;
+    margin: 0;
+  }
+
+  /* ── RESOURCE LIST ── */
+  .resource-list {
+    margin: 30px 0;
+    list-style: none;
+  }
+
+  .resource-list li {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--divider);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .resource-list li:last-child { border-bottom: none; }
+
+  .resource-marker {
+    width: 6px;
+    height: 6px;
+    background: var(--brand-blue);
+    border-radius: 50%;
+    margin-top: 10px;
+    flex-shrink: 0;
+  }
+
+  .resource-list a {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15.5px;
+    color: var(--brand-blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .resource-list a:hover { text-decoration: underline; color: var(--brand-blue-light); }
+
+  .resource-desc {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #252542 100%);
+    color: rgba(255,255,255,0.6);
+    padding: 48px 40px;
+    margin-top: 0;
+  }
+
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .footer p {
+    font-size: 13px;
+    max-width: 400px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .footer-right {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    text-align: right;
+  }
+
+  /* ── TWO-COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin: 30px 0;
+  }
+
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+    .masthead-inner, .main { padding-left: 20px; padding-right: 20px; }
+    .toc-inner { padding: 0 20px; }
+    .footer { padding: 40px 20px; }
+  }
+
+  /* ── INLINE BADGE ── */
+  .badge {
+    display: inline-block;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--brand-blue);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .badge-green { background: var(--success); }
+
+  /* ── FADE IN ANIMATION ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .masthead-inner > * {
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .masthead-inner > *:nth-child(1) { animation-delay: 0.1s; }
+  .masthead-inner > *:nth-child(2) { animation-delay: 0.22s; }
+  .masthead-inner > *:nth-child(3) { animation-delay: 0.34s; }
+  .masthead-inner > *:nth-child(4) { animation-delay: 0.46s; }
+
+  .brand-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-orange) 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .brand-nav a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .brand-nav a:hover {
+    color: #fff;
+  }
+
+  .brand-nav .btn {
+    background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .brand-nav .btn:hover {
+    background: linear-gradient(135deg, var(--brand-blue-light) 0%, var(--brand-blue) 100%);
+    color: #fff;
+  }
+
+  /* ── HORIZONTAL RULE FANCY ── */
+  .fancy-rule {
+    border: none;
+    text-align: center;
+    margin: 40px 0;
+    color: var(--divider);
+    letter-spacing: 1em;
+    font-size: 12px;
+  }
+
+  .fancy-rule::before { content: '✦  ✦  ✦'; color: var(--brand-blue); opacity: 0.3; }
+
+  /* Warning */
+  .warning-box {
+    border: 1px solid rgba(255,102,0,0.3);
+    background: linear-gradient(90deg, rgba(255,153,51,0.05) 0%, transparent 100%);
+    padding: 20px 28px;
+    margin: 24px 0;
+    border-radius: 8px;
+  }
+  .warning-box p { font-size: 14.5px; color: var(--text-secondary); max-width: 100%; margin: 0; }
+  .warning-box strong { color: var(--brand-orange); }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="brand-header">
+    <a href="index.html" class="brand-logo">
+      <div class="logo-icon">30</div>
+      <span class="logo-text">30see</span>
+    </a>
+    <nav class="brand-nav">
+      <a href="index.html">首页</a>
+      <a href="courses.html">课程</a>
+      <a href="index.html" class="btn">返回主页</a>
+    </nav>
+  </div>
+  <div class="masthead-inner">
+    <span class="masthead-label">内容创作者的数字工作室</span>
+    <h1>内容创作者Git使用指南</h1>
+    <p class="masthead-sub">你不需要懂编程。你只需要明白一件事：你的文字值得被认真对待，而 Git 正是这种认真的工具。</p>
+    <div class="masthead-meta">
+      <span class="meta-item"><span class="meta-dot"></span> 面向：写作者 · 博主 · 编辑 · 内容创作者</span>
+      <span class="meta-item"><span class="meta-dot"></span> 无需编程基础</span>
+      <span class="meta-item"><span class="meta-dot"></span> 灵感来源：It's FOSS</span>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="toc-bar">
+  <div class="toc-inner">
+    <a class="toc-link" href="#why">为何需要 Git</a>
+    <a class="toc-link" href="#what">Git 是什么</a>
+    <a class="toc-link" href="#concepts">核心概念</a>
+    <a class="toc-link" href="#start">上手指南</a>
+    <a class="toc-link" href="#workflow">日常工作流</a>
+    <a class="toc-link" href="#gui">图形界面工具</a>
+    <a class="toc-link" href="#markdown">纯文本写作</a>
+    <a class="toc-link" href="#collab">协作写作</a>
+    <a class="toc-link" href="#resources">延伸资源</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ── WHY ── -->
+  <section class="section" id="why">
+    <div class="section-header">
+        <div class="section-badge">
+            <span class="badge-num">一</span>
+        </div>
+        <div class="section-title-group">
+            <span class="section-label">动机</span>
+            <h2>你的写作值得一个更好的家</h2>
+        </div>
+    </div>
+
+    <p>2019 年，一位作家差点失去她一生的心血——唯一的手稿副本保存在一个 U 盘里。那个 U 盘丢了。</p>
+
+    <p>这个故事触目惊心，但它并不罕见。我们大多数人的写作都以某种脆弱的方式存在着：一个 Google Doc、一个 Notion 页面、一个 Dropbox 文件夹里名字越来越长的文件——<code>定稿_v3_最终版_真的最终.docx</code>。</p>
+
+    <div class="pullquote">
+      <p>"那个 U 盘消失了，一部小说也随之消失。这不仅仅是备份问题——这是关于我们如何对待自己工作的根本态度问题。"</p>
+      <cite>— Theena Kumaragurunathan，《Git 不只是给开发者的》</cite>
+    </div>
+
+    <p>软件工程师早就解决了这个问题。他们用 <strong>Git</strong>——一种版本控制系统。它记录每一次变化，允许你随时回到任何一个过去的时刻，让协作变得有序而非混乱。</p>
+
+    <p>问题是：没有人告诉写内容创作者们 Git 也适合他们。</p>
+
+    <h3>你现在的痛点，Git 都能解决</h3>
+
+    <div class="two-col">
+      <div>
+        <h4 style="font-family:'Noto Serif SC';font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:10px;">❌ 现在的问题</h4>
+        <p style="font-size:14px;max-width:100%;color:var(--text-secondary);line-height:1.75;">
+          • 文件名混乱，无法判断哪个是最新版<br>
+          • 删掉一段后悔了，但找不回来<br>
+          • 与编辑协作时版本冲突<br>
+          • 作品存放于第三方平台，受平台规则限制<br>
+          • 无法追踪"这段是什么时候写的，为什么这么改"
+        </p>
+      </div>
+      <div>
+        <h4 style="font-family:'Noto Serif SC';font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:10px;">✅ Git 之后</h4>
+        <p style="font-size:14px;max-width:100%;color:var(--text-secondary);line-height:1.75;">
+          • 永远只有一个文件，历史清晰可查<br>
+          • 任何修改都可以回退，删除不再是永久的<br>
+          • 多人协作有序，改动有迹可循<br>
+          • 文件存在你控制的地方<br>
+          • 每次提交都记录了你的思考过程
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WHAT IS GIT ── -->
+  <section class="section" id="what">
+    <div class="section-header">
+        <div class="section-badge">
+            <span class="badge-num">二</span>
+        </div>
+        <div class="section-title-group">
+            <span class="section-label">理解</span>
+            <h2>Git 是什么？用写作者的语言来说</h2>
+        </div>
+    </div>
+
+    <p>Git 是一个<strong>版本控制系统</strong>。它的工作很简单：追踪你的文件随时间发生的每一次变化，让你能随时回到任意一个过去的时刻。</p>
+
+    <div class="analogy-box">
+      <span class="analogy-label">类比理解</span>
+      <p>想象你的手稿是一条河流。Google Docs 的"版本历史"就像在河边偶尔拍了几张照片——有的，但没有规律。Git 则像在河里每隔一段距离设置了一个精确的坐标点，每个点都有标注："这里，2024年3月12日，我重写了第三章的结尾，因为觉得太仓促。"你不仅可以看照片，还可以把时间倒流回任意一个坐标。</p>
+    </div>
+
+    <h3>Git 和 GitHub 是一回事吗？</h3>
+    <p>很多人混淆这两个词，但它们不同：</p>
+
+    <div class="concept-grid" style="grid-template-columns:1fr 1fr;max-width:600px;">
+      <div class="concept-card">
+        <span class="concept-term">Git</span>
+        <span class="concept-zh">版本控制工具</span>
+        <p>安装在你电脑上的软件，负责追踪文件变化、管理创作历史。一个功能极其强大的本地"版本历史"，可以随时回溯到任何一个过去的时刻。</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-term">GitHub / Gitea / Codeberg</span>
+        <span class="concept-zh">云端存储平台</span>
+        <p>在线服务，用来存储和分享你的 Git 仓库。GitHub 最出名，但不是唯一选择。如同云盘之于本地文件——你的文件在那里，但本地也有一份。</p>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <span class="hb-label">关键认知</span>
+      <p>Git 不要求你懂编程。它只是一套管理文件变化的规则。你的文章、章节、笔记——只要是纯文本文件，Git 就能完美追踪。</p>
+    </div>
+  </section>
+
+  <!-- ── CONCEPTS ── -->
+  <section class="section" id="concepts">
+    <div class="section-header">
+        <div class="section-badge">
+            <span class="badge-num">三</span>
+        </div>
+        <div class="section-title-group">
+            <span class="section-label">词汇表</span>
+            <h2>六个核心概念，用创作者语言解释</h2>
+        </div>
+    </div>
+
+    <p>Git 有自己的专业词汇。以下是写作者需要理解的六个最重要的概念，全部用写作的语言来解释。</p>
+
+    <div class="concept-grid">
+      <div class="concept-card">
+        <span class="concept-term">repository（仓库）</span>
+        <span class="concept-zh">你的写作项目</span>
+        <p>一个包含你所有文件及其完整历史的文件夹。你的一本小说可以是一个仓库，你的博客文章集也可以是一个仓库。</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-term">commit（提交）</span>
+        <span class="concept-zh">一个时间存档点</span>
+        <p>就像游戏里的"存档"。每次你对写作做了一些有意义的改动，就创建一个提交，并写一句话描述你做了什么。"重写了第二章的开场白" 就是一个好的提交说明。</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-term">branch（分支）</span>
+        <span class="concept-zh">平行草稿</span>
+        <p>允许你在不影响"正式稿"的情况下，另开一条线索尝试全新的方向。比如："如果用第一人称写第三章会怎样？"创建一个分支来试验，满意了再合并，不满意就丢弃。</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-term">merge（合并）</span>
+        <span class="concept-zh">整合修改</span>
+        <p>将一个分支上的改动整合到主稿中。就像把编辑返回的修订意见应用到你的原稿里。</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-term">clone（克隆）</span>
+        <span class="concept-zh">完整复制一份</span>
+        <p>将一个仓库（包括全部历史）复制到你的本地电脑。就像从云端下载你的完整写作档案，可以在新电脑上接着写。</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-term">push / pull（推送/拉取）</span>
+        <span class="concept-zh">同步到云端/从云端更新</span>
+        <p>Push：把本地最新的改动上传到 GitHub。Pull：从 GitHub 下载别人（或你自己在另一台设备上）做的最新改动。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GETTING STARTED ── -->
+  <section class="section" id="start">
+    <div class="section-header">
+        <div class="section-badge">
+            <span class="badge-num">四</span>
+        </div>
+        <div class="section-title-group">
+            <span class="section-label">实操</span>
+            <h2>从零开始：你的第一个写作仓库</h2>
+        </div>
+    </div>
+
+    <p>以下步骤假设你是全新的开始。我们会先用命令行建立基础，然后在下一节介绍图形界面工具（鼠标点击，无需命令行）。</p>
+
+    <div class="warning-box">
+      <p><strong>写在前面：</strong>命令行看起来吓人，但你只需要记住五到六条命令。如果你更喜欢图形界面，完全可以跳过这一节，直接去看"图形界面工具"部分。</p>
+    </div>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>安装 Git</h4>
+          <p>访问 <strong>git-scm.com</strong>，下载适合你系统（Windows / macOS / Linux）的安装包，按提示安装即可。macOS 用户也可以通过 Homebrew 安装：</p>
+          <div class="code-block">
+            <span class="code-label">TERMINAL</span>
+            brew install git
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>告诉 Git 你是谁</h4>
+          <p>只需要做一次。Git 需要知道你的名字和邮箱，这些信息会出现在每次提交记录里：</p>
+          <div class="code-block">
+            <span class="code-label">TERMINAL</span>
+            git config --global user.name "你的名字"<br>
+            git config --global user.email "你的邮箱@example.com"
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>为你的项目创建仓库</h4>
+          <p>进入你的写作文件夹，然后初始化一个 Git 仓库：</p>
+          <div class="code-block">
+            <span class="code-label">TERMINAL</span>
+            cd ~/Documents/我的小说<br>
+            git init<br>
+            <span class="code-comment"># 此文件夹现在被 Git 管理了</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>做你的第一次提交</h4>
+          <p>把所有现有文件加入追踪，并创建第一个存档点：</p>
+          <div class="code-block">
+            <span class="code-label">TERMINAL</span>
+            git add .<br>
+            <span class="code-comment"># "." 表示添加当前文件夹里的所有文件</span><br><br>
+            git commit -m "初始提交：项目开始"<br>
+            <span class="code-comment"># 引号里是你对这次改动的描述</span>
+          </div>
+          <p>恭喜，你的第一个存档点创建成功了。</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>连接到 GitHub（可选，但推荐）</h4>
+          <p>在 <strong>github.com</strong> 注册账号，创建一个新的仓库，然后将本地项目连接上去：</p>
+          <div class="code-block">
+            <span class="code-label">TERMINAL</span>
+            git remote add origin https://github.com/你的用户名/你的仓库名.git<br>
+            git push -u origin main<br>
+            <span class="code-comment"># 此后你的写作就有了云端备份</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DAILY WORKFLOW ── -->
+  <section class="section" id="workflow">
+    <div class="section-header">
+        <div class="section-badge">
+            <span class="badge-num">五</span>
+        </div>
+        <div class="section-title-group">
+            <span class="section-label">节奏</span>
+            <h2>写作者的日常 Git 工作流</h2>
+        </div>
+    </div>
+
+    <p>掌握 Git 之后，你的日常写作节奏只需要三个动作：<strong>写作 → 提交 → 同步</strong>。</p>
+
+    <div class="workflow">
+      <div class="wf-step">写作<span class="wf-sub">在你喜欢的编辑器里</span></div>
+      <span class="wf-arrow">→</span>
+      <div class="wf-step">git add .<span class="wf-sub">暂存改动</span></div>
+      <span class="wf-arrow">→</span>
+      <div class="wf-step">git commit -m "..."<span class="wf-sub">记录存档</span></div>
+      <span class="wf-arrow">→</span>
+      <div class="wf-step">git push<span class="wf-sub">上传到云端</span></div>
+    </div>
+
+    <h3>什么时候该提交？</h3>
+    <p>没有严格规定，但以下是一些好的触发时机：</p>
+    <p style="max-width:100%;font-size:15px;color:var(--text-secondary);line-height:2;">
+      • 完成了一个完整的章节或段落<br>
+      • 做了一次大的结构调整<br>
+      • 删除了一段文字（提交后删除不再是永久的）<br>
+      • 今天的写作结束，准备关电脑<br>
+      • 在尝试一个新方向之前（先提交，再实验）
+    </p>
+
+    <h3>如何写好提交说明？</h3>
+    <div class="two-col">
+      <div>
+        <p style="font-size:13px;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;font-family:'Noto Sans SC';margin-bottom:8px;">❌ 不好的提交说明</p>
+        <div class="code-block" style="border-left-color:#C0392B;">
+          git commit -m "更新"<br>
+          git commit -m "修改了一些东西"<br>
+          git commit -m "asdfjkl"
+        </div>
+      </div>
+      <div>
+        <p style="font-size:13px;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;font-family:'Noto Sans SC';margin-bottom:8px;">✅ 好的提交说明</p>
+        <div class="code-block" style="border-left-color:#27AE60;">
+          git commit -m "第三章：重写了主角出场场景"<br>
+          git commit -m "删去了2000字的支线，暂存备用"<br>
+          git commit -m "调整了第一章时间线，修正逻辑漏洞"
+        </div>
+      </div>
+    </div>
+
+    <h3>如何查看历史记录？</h3>
+    <div class="code-block">
+      <span class="code-label">TERMINAL</span>
+      git log --oneline<br>
+      <span class="code-comment"># 简洁地显示所有提交历史</span>
+    </div>
+
+    <h3>如何回到过去某个版本？</h3>
+    <div class="code-block">
+      <span class="code-label">TERMINAL</span>
+      git log --oneline<br>
+      <span class="code-comment"># 找到你想回去的那个提交，复制它的 ID（例如 a3f9c12）</span><br><br>
+      git checkout a3f9c12 -- 第三章.md<br>
+      <span class="code-comment"># 这会将"第三章.md"恢复到那个版本，其他文件不受影响</span>
+    </div>
+  </section>
+
+  <!-- ── GUI TOOLS ── -->
+  <section class="section" id="gui">
+    <div class="section-header">
+        <div class="section-badge">
+            <span class="badge-num">六</span>
+        </div>
+        <div class="section-title-group">
+            <span class="section-label">工具推荐</span>
+            <h2>不用命令行？这些图形工具为你准备</h2>
+        </div>
+    </div>
+
+    <p>命令行不是使用 Git 的唯一方式。以下这些图形界面工具让你用鼠标就能完成所有操作，对写作者尤其友好：</p>
+
+    <div class="tool-grid">
+      <div class="tool-card">
+        <span class="tool-icon">🖥️</span>
+        <span class="tool-name">GitHub Desktop</span>
+        <span class="tool-tag">免费 · Windows / macOS · 官方出品</span>
+        <p>GitHub 官方出品，界面简洁直观。提交、推送、拉取、查看历史，全部鼠标操作。<strong>最推荐的入门工具。</strong></p>
+      </div>
+      <div class="tool-card">
+        <span class="tool-icon">🦊</span>
+        <span class="tool-name">GitKraken</span>
+        <span class="tool-tag">免费/付费 · 全平台</span>
+        <p>可视化展示分支树状图，让"平行草稿"的概念一目了然。适合喜欢视觉化管理的创作者。</p>
+      </div>
+      <div class="tool-card">
+        <span class="tool-icon">📝</span>
+        <span class="tool-name">VS Code + Git 插件</span>
+        <span class="tool-tag">免费 · 全平台</span>
+        <p>如果你用 VS Code 写作，它内置了 Git 界面。写完直接在编辑器里提交，无需切换应用。</p>
+      </div>
+      <div class="tool-card">
+        <span class="tool-icon">🌊</span>
+        <span class="tool-name">Sourcetree</span>
+        <span class="tool-tag">免费 · Windows / macOS</span>
+        <p>Atlassian 出品，功能强大，适合想要更多控制权的创作者。可视化提交树和分支管理清晰易懂。</p>
+      </div>
+      <div class="tool-card">
+        <span class="tool-icon">🌿</span>
+        <span class="tool-name">Obsidian Git 插件</span>
+        <span class="tool-tag">免费 · Obsidian 用户专属</span>
+        <p>如果你用 Obsidian 做笔记和写作，这个插件可以让你的整个 Vault 自动由 Git 管理，完全无感。</p>
+      </div>
+      <div class="tool-card">
+        <span class="tool-icon">✍️</span>
+        <span class="tool-name">Typora / Zettlr</span>
+        <span class="tool-tag">所见即所得 Markdown 编辑器</span>
+        <p>这些编辑器将 Markdown 文件渲染得像 Word 文档一样漂亮，同时保持纯文本底层，与 Git 完美配合。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PLAIN TEXT / MARKDOWN ── -->
+  <section class="section" id="markdown">
+    <div class="section-header">
+        <div class="section-badge">
+            <span class="badge-num">七</span>
+        </div>
+        <div class="section-title-group">
+            <span class="section-label">纯文本写作</span>
+            <h2>为什么要用纯文本？Markdown 速成</h2>
+        </div>
+    </div>
+
+    <div class="pullquote">
+      <p>"纯文本是最不性感、也最重要的数字基础设施。选择用纯文本写作，是一个关于记忆与权力的政治选择，不仅仅是文件格式的偏好。"</p>
+      <cite>— Theena Kumaragurunathan</cite>
+    </div>
+
+    <p>Git 可以追踪任何文件，但它对<strong>纯文本文件</strong>（.txt, .md）的追踪效果最完美——它可以精确显示哪一行哪个字被改了。对于 .docx 这类二进制格式，Git 只能说"这个文件变了"，而无法告诉你具体改了什么。</p>
+
+    <h3>Markdown：写作者的最佳选择</h3>
+    <p>Markdown 是一种极简的纯文本格式语法。你用普通符号标注格式，写作时不会被排版打断，导出时可以变成 Word、PDF、网页等任意格式。</p>
+
+    <div class="two-col">
+      <div>
+        <p style="font-size:13px;font-family:'Noto Sans SC';color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">你这样写（纯文本）</p>
+        <div class="code-block" style="font-size:13px;">
+          # 第一章：归途<br><br>
+          这是一个**关于回家**的故事。<br><br>
+          他走在*熟悉又陌生*的街道上。<br><br>
+          &gt; 有些地方，你离开了就再也回不去了。<br><br>
+          ---
+        </div>
+      </div>
+      <div>
+        <p style="font-size:13px;font-family:'Noto Sans SC';color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">渲染后看起来是这样</p>
+        <div style="background:#FBF7EE;border:1px solid var(--divider);padding:20px 24px;font-size:14px;line-height:1.8;">
+          <h3 style="font-family:'Noto Serif SC';font-size:16px;font-weight:700;margin:0 0 10px;">第一章：归途</h3>
+          <p style="margin:0 0 8px;font-size:14px;max-width:100%;">这是一个<strong>关于回家</strong>的故事。</p>
+          <p style="margin:0 0 8px;font-size:14px;max-width:100%;">他走在<em>熟悉又陌生</em>的街道上。</p>
+          <blockquote style="border-left:2px solid var(--divider);padding:4px 12px;margin:8px 0;color:var(--text-secondary);font-style:italic;font-size:13px;">有些地方，你离开了就再也回不去了。</blockquote>
+          <hr style="border:none;border-top:1px solid var(--divider);margin:8px 0;">
+        </div>
+      </div>
+    </div>
+
+    <h3>推荐的文件夹结构</h3>
+    <div class="code-block">
+      <span class="code-label">文件结构示例</span>
+      我的小说/<br>
+      ├── 第一章.md<br>
+      ├── 第二章.md<br>
+      ├── 第三章.md<br>
+      ├── 人物设定.md<br>
+      ├── 世界观笔记.md<br>
+      ├── 删减内容/<br>
+      │   └── 被删的支线A.md<br>
+      └── toc.md   <span class="code-comment"># 章节目录和写作进度</span>
+    </div>
+
+    <div class="highlight-box">
+      <span class="hb-label">重要提示</span>
+      <p>每章独立一个文件，比把整本书放在一个文件里要好得多。Git 可以精确追踪每个章节的变化，而不是把整本书视为一个整体。</p>
+    </div>
+  </section>
+
+  <!-- ── COLLAB ── -->
+  <section class="section" id="collab">
+    <div class="section-header">
+        <div class="section-badge">
+            <span class="badge-num">八</span>
+        </div>
+        <div class="section-title-group">
+            <span class="section-label">协作</span>
+            <h2>与编辑、合著者协作</h2>
+        </div>
+    </div>
+
+    <p>Git 真正改变游戏规则的场景是协作写作。告别"请看附件_最终稿_修改版(3).docx"这种噩梦。</p>
+
+    <h3>基本协作流程</h3>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>作者将仓库分享给编辑</h4>
+          <p>在 GitHub 上将编辑添加为协作者，或者给他们仓库的链接（如果是公开仓库）。编辑用 <code>git clone</code> 下载完整项目到本地。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>编辑在自己的分支上工作</h4>
+          <p>编辑创建一个新分支，在上面做修改，不会影响作者的主稿：</p>
+          <div class="code-block">git checkout -b 编辑-李明-第一章修订</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>提交修改，发起 Pull Request</h4>
+          <p>编辑完成修改后，在 GitHub 上发起一个 Pull Request（PR）——本质上是在说："我做了这些修改，请作者审阅是否接受。"</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>作者审阅并决定是否合并</h4>
+          <p>作者可以逐行查看每处改动，留下评论，接受或拒绝特定修改，最终决定是否将编辑的修改合并到主稿中。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <span class="analogy-label">类比理解</span>
+      <p>Pull Request 就像编辑寄回的修改稿，但不是一个新文件——而是一个精确标注了"哪里删了什么、哪里加了什么"的清单，你可以逐项决定接不接受，最终只有一份稿子存在。</p>
+    </div>
+  </section>
+
+  <!-- ── RESOURCES ── -->
+  <section class="section" id="resources">
+    <div class="section-header">
+        <div class="section-badge">
+            <span class="badge-num">九</span>
+        </div>
+        <div class="section-title-group">
+            <span class="section-label">进一步学习</span>
+            <h2>精选延伸资源</h2>
+        </div>
+    </div>
+
+    <p>以下是经过筛选的优质资源，专为非程序员写作者准备：</p>
+
+    <ul class="resource-list">
+      <li>
+        <span class="resource-marker"></span>
+        <div>
+          <a href="https://itsfoss.com/opinion/git-plain-text-writing/" target="_blank">Git Isn't Just for Developers — It's FOSS</a>
+          <span class="resource-desc">本指南的灵感来源。Theena Kumaragurunathan 以小说家视角讲述为何将写作迁移到 Git 和纯文本。</span>
+        </div>
+      </li>
+      <li>
+        <span class="resource-marker"></span>
+        <div>
+          <a href="https://plain-text.co/" target="_blank">The Plain Person's Guide to Plain Text Social Science — Kieran Healy</a>
+          <span class="resource-desc">社会学家 Kieran Healy 写给"普通人"的纯文本写作指南，无需编程背景。</span>
+        </div>
+      </li>
+      <li>
+        <span class="resource-marker"></span>
+        <div>
+          <a href="https://www.scrygroup.com/tutorial/2020-01-07/guide-to-git-github-for-writers/" target="_blank">Guide to Git and GitHub for Writers — Scry Group</a>
+          <span class="resource-desc">面向内容创作者的完整 Git + GitHub 入门教程，包含 Markdown 工作流介绍。</span>
+        </div>
+      </li>
+      <li>
+        <span class="resource-marker"></span>
+        <div>
+          <a href="https://opensource.com/article/19/4/write-git" target="_blank">How Writers Can Get Work Done Better with Git — Opensource.com</a>
+          <span class="resource-desc">详细介绍如何用 Atom 编辑器配合 Git 进行写作，涵盖章节管理和分支使用的实际场景。</span>
+        </div>
+      </li>
+      <li>
+        <span class="resource-marker"></span>
+        <div>
+          <a href="https://invisiblepublishing.com/2017/07/12/my-friend-git/" target="_blank">My Friend Git — Invisible Publishing</a>
+          <span class="resource-desc">出版行业从业者讲述如何将 Git 应用于编辑流程和手稿管理的真实经验。</span>
+        </div>
+      </li>
+      <li>
+        <span class="resource-marker"></span>
+        <div>
+          <a href="https://www.udemy.com/course/git-and-github-for-writers/" target="_blank">Git and GitHub for Writers — Udemy 课程</a>
+          <span class="resource-desc">Udemy 上专为写作者设计的 Git 课程，不以开发者为假想受众，适合零基础学习。</span>
+        </div>
+      </li>
+      <li>
+        <span class="resource-marker"></span>
+        <div>
+          <a href="https://docs.github.com/zh/desktop" target="_blank">GitHub Desktop 官方文档</a>
+          <span class="resource-desc">图形界面 Git 客户端的官方中文文档，鼠标操作，无需命令行。</span>
+        </div>
+      </li>
+      <li>
+        <span class="resource-marker"></span>
+        <div>
+          <a href="https://www.markdownguide.org/getting-started/" target="_blank">Markdown Guide — 入门指南</a>
+          <span class="resource-desc">Markdown 语法最清晰的入门文档，10 分钟学会基础语法。</span>
+        </div>
+      </li>
+    </ul>
+
+    <hr class="fancy-rule">
+
+    <div class="pullquote">
+      <p>"版本控制让我的写作工作室变成了一台时间机器。每次提交，都是我与未来的自己之间的一次对话。"</p>
+      <cite>— Theena Kumaragurunathan，小说家</cite>
+    </div>
+
+    <h3>常用命令速查卡</h3>
+    <div class="code-block">
+      <span class="code-label">CHEAT SHEET</span>
+      git init                          <span class="code-comment"># 初始化仓库</span><br>
+      git status                        <span class="code-comment"># 查看当前状态</span><br>
+      git add .                         <span class="code-comment"># 暂存所有改动</span><br>
+      git add 第三章.md                  <span class="code-comment"># 只暂存某个文件</span><br>
+      git commit -m "你的提交说明"        <span class="code-comment"># 创建存档点</span><br>
+      git log --oneline                 <span class="code-comment"># 查看提交历史</span><br>
+      git diff                          <span class="code-comment"># 查看未提交的改动</span><br>
+      git push                          <span class="code-comment"># 同步到 GitHub</span><br>
+      git pull                          <span class="code-comment"># 从 GitHub 更新</span><br>
+      git checkout -b 新分支名           <span class="code-comment"># 创建并切换到新分支</span><br>
+      git checkout 分支名                <span class="code-comment"># 切换分支</span><br>
+      git merge 分支名                   <span class="code-comment"># 将某分支合并到当前分支</span>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-title">30see</div>
+      <p>内容创作者的数字工作室。基于 It's FOSS 等优质资源整理，专为内容创作者、写作者及非程序员群体设计。你的文字值得被认真对待。</p>
+      <div style="margin-top:16px; display:flex; gap:16px;">
+        <a href="index.html" style="color:rgba(255,255,255,0.6); text-decoration:none; font-size:13px;">首页</a>
+        <a href="courses.html" style="color:rgba(255,255,255,0.6); text-decoration:none; font-size:13px;">课程</a>
+        <a href="relaxation.html" style="color:rgba(255,255,255,0.6); text-decoration:none; font-size:13px;">放松效果</a>
+      </div>
+    </div>
+    <div class="footer-right">
+      <div style="margin-bottom:4px;">Git 创作者指南</div>
+      <div style="color: rgba(255,255,255,0.4);">© 2026 30see</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
