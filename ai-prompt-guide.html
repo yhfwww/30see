@@ -1432,7 +1432,7 @@
 
 <script src="js/stats.js"></script>
 <script>
-if (typeof StatsAPI !== 'undefined') {
+if (typeof StatsAPI !== 'undefined' && typeof StatsAPI.incrementVisit === 'function') {
     StatsAPI.incrementVisit('ai-prompt-guide');
 }
 </script>
