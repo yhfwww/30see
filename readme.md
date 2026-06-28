@@ -57,7 +57,7 @@
 │   ├── rain.html              # 雨滴动画
 │   └── sakura.html            # 樱花动画
 ├── DESIGN.md                  # 设计系统规范（配色/排版/组件）
-├── agents.md                  # 设计配色方案重点
+├── agent.md                   # Agent 协作指南（含配色与统计说明）
 ├── CNAME                      # GitHub Pages 自定义域名
 ├── LICENSE                    # Apache 2.0 许可证
 └── .gitignore
@@ -97,7 +97,7 @@ www.30see.xyz
 
 ## 🎨 设计系统
 
-详见 [DESIGN.md](DESIGN.md) 与 [agents.md](agents.md)。核心要点：
+详见 [DESIGN.md](DESIGN.md) 与 [agent.md](agent.md)。核心要点：
 
 - **主色**：品牌蓝 `#0066cc → #0099ff`，品牌橙 `#ff6600 → #ff9933`
 - **点缀色**：紫 `#6a0dad`、红 `#ff3333`
