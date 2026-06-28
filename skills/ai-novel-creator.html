@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ai-novel-creator AI小说创作助手使用心得 - 30see 技能卡片库">
+<meta name="keywords" content="ai-novel-creator,小说创作,AI写作,三幕结构,短篇小说">
+<title>ai-novel-creator AI小说创作助手使用心得 - 30see</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary-blue: #0066cc;
+--primary-blue-light: #0099ff;
+--primary-orange: #ff6600;
+--primary-orange-light: #ff9933;
+--accent-purple: #6a0dad;
+--accent-red: #ff3333;
+--brand-green: #28a745;
+--dark: #1a1a2e;
+--light: #f8f9fa;
+--white: #ffffff;
+--off-white: #f0f4f8;
+--text-primary: #1a1a2e;
+--text-secondary: #4a4a6a;
+--text-muted: #7a7a9a;
+--divider: #d0d8e4;
+--highlight: #fff3d9;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+  background-color: var(--off-white);
+  color: var(--text-primary);
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+/* ── BRAND HEADER ── */
+.brand-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; background: rgba(26, 26, 46, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; }
+.brand-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-orange) 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-size: 16px; }
+.logo-text { color: #fff; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+.brand-nav { display: flex; gap: 20px; align-items: center; }
+.brand-nav a { color: rgba(255,255,255,0.8); text-decoration: none; font-family: 'Noto Sans SC', sans-serif; font-size: 13px; letter-spacing: 0.05em; transition: color 0.2s; }
+.brand-nav a:hover { color: #fff; }
+.brand-nav .btn { background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%); color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; }
+.brand-nav .btn:hover { background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--primary-blue) 100%); color: #fff; }
+
+/* ── ARTICLE HERO ── */
+.skill-hero { background: linear-gradient(135deg, var(--dark) 0%, #16213e 50%, #0f3460 100%); padding: 60px 20px 50px; text-align: center; position: relative; overflow: hidden; }
+.skill-hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255, 102, 0, 0.15) 0%, transparent 70%); animation: pulse 8s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+.skill-icon-big { font-size: 4rem; display: block; margin-bottom: 16px; position: relative; z-index: 1; }
+.skill-name { font-family: 'Noto Serif SC', serif; font-size: 2.4rem; font-weight: 700; color: #fff; margin-bottom: 8px; position: relative; z-index: 1; }
+.skill-name-en { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--primary-orange-light); margin-bottom: 12px; position: relative; z-index: 1; letter-spacing: 0.05em; }
+.skill-tagline { font-size: 1.1rem; color: rgba(255,255,255,0.75); max-width: 640px; margin: 0 auto 24px; position: relative; z-index: 1; }
+.skill-badges { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+.badge { font-size: 0.82rem; padding: 6px 16px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.badge-difficulty-intermediate { background: rgba(0, 102, 204, 0.2); color: #66b3ff; border: 1px solid rgba(0,102,204,0.3); }
+.badge-category { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+.badge-rating { background: rgba(255, 102, 0, 0.2); color: #ffb366; border: 1px solid rgba(255,102,0,0.3); }
+.skill-link-row { margin-top: 18px; position: relative; z-index: 1; }
+.skill-link-row a { color: var(--primary-orange-light); font-size: 0.88rem; text-decoration: none; border-bottom: 1px dashed rgba(255,179,102,0.5); transition: all 0.2s; }
+.skill-link-row a:hover { color: #fff; border-bottom-color: #fff; }
+
+/* ── ARTICLE BODY ── */
+.article-wrap { max-width: 820px; margin: -30px auto 0; padding: 0 20px; position: relative; z-index: 2; }
+.article { background: var(--white); border-radius: 16px; padding: 50px 50px 40px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); }
+.section { margin-bottom: 44px; }
+.section:last-child { margin-bottom: 0; }
+.section-title { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; color: var(--primary-orange); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid var(--off-white); display: flex; align-items: center; gap: 10px; }
+.section-title .sec-icon { font-size: 1.3rem; }
+.section p { font-size: 1rem; color: var(--text-secondary); margin-bottom: 14px; }
+.section p strong { color: var(--text-primary); }
+.section ul, .section ol { padding-left: 24px; margin-bottom: 14px; color: var(--text-secondary); }
+.section li { margin-bottom: 8px; line-height: 1.8; }
+
+.scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 8px; }
+.scenario-card { background: var(--off-white); border-radius: 12px; padding: 18px; border: 1px solid var(--divider); }
+.scenario-card .sc-title { font-weight: 600; color: var(--text-primary); margin-bottom: 6px; font-size: 0.95rem; }
+.scenario-card .sc-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+.pitfall-list { list-style: none; padding-left: 0; }
+.pitfall-list li { background: #fdf3f3; border-left: 4px solid var(--accent-red); padding: 14px 18px; border-radius: 8px; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.95rem; }
+.pitfall-list li strong { color: var(--accent-red); }
+
+.tip-list { list-style: none; padding-left: 0; }
+.tip-list li { background: #fff5ec; border-left: 4px solid var(--primary-orange); padding: 14px 18px; border-radius: 8px; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.95rem; }
+.tip-list li strong { color: var(--primary-orange); }
+
+/* 流程步骤 */
+.flow-list { list-style: none; padding-left: 0; counter-reset: flow; }
+.flow-list li { counter-increment: flow; padding: 14px 18px 14px 56px; margin-bottom: 12px; background: var(--off-white); border-radius: 10px; position: relative; color: var(--text-secondary); font-size: 0.95rem; border-left: 3px solid var(--primary-orange); }
+.flow-list li::before { content: counter(flow); position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-light)); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+.flow-list li strong { color: var(--text-primary); }
+
+/* 模块网格 */
+.module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 10px; }
+.module-card { background: linear-gradient(135deg, var(--off-white) 0%, var(--white) 100%); border-radius: 10px; padding: 16px; border: 1px solid var(--divider); }
+.module-card .mod-num { display: inline-block; width: 24px; height: 24px; background: var(--primary-orange); color: #fff; border-radius: 50%; text-align: center; line-height: 24px; font-size: 0.78rem; font-weight: 700; margin-bottom: 8px; }
+.module-card .mod-title { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; margin-bottom: 4px; }
+.module-card .mod-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+
+/* 比例条 */
+.ratio-bar { display: flex; height: 44px; border-radius: 10px; overflow: hidden; margin: 16px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.ratio-seg { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 0.82rem; font-weight: 600; padding: 4px; }
+.ratio-seg .r-label { font-size: 0.72rem; opacity: 0.9; font-weight: 400; }
+.ratio-act1 { background: linear-gradient(135deg, #0066cc, #0099ff); flex: 25; }
+.ratio-act2 { background: linear-gradient(135deg, #ff6600, #ff9933); flex: 50; }
+.ratio-act3 { background: linear-gradient(135deg, #6a0dad, #9b59b6); flex: 25; }
+
+.verdict { background: linear-gradient(135deg, var(--off-white) 0%, var(--white) 100%); border: 2px solid var(--divider); border-radius: 14px; padding: 28px; text-align: center; }
+.verdict-score { font-size: 2rem; color: var(--primary-orange); letter-spacing: 4px; margin-bottom: 8px; }
+.verdict-text { font-size: 1.05rem; color: var(--text-primary); font-weight: 500; }
+
+.back-row { text-align: center; margin-top: 40px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.back-link { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; font-size: 1rem; font-weight: 600; background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-light)); color: #fff; border-radius: 30px; text-decoration: none; transition: all 0.3s ease; }
+.back-link:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255, 102, 0, 0.3); }
+.back-link.secondary { background: transparent; color: var(--primary-orange); border: 2px solid var(--primary-orange); }
+.back-link.secondary:hover { background: var(--primary-orange); color: #fff; }
+
+/* ── FOOTER ── */
+footer { background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%); color: var(--white); padding: 40px 20px; text-align: center; margin-top: 60px; }
+.footer-logo { max-width: 160px; margin-bottom: 16px; }
+.footer-text { opacity: 0.8; font-size: 0.9rem; }
+.footer-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
+.footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+.footer-links a:hover { color: var(--primary-orange-light); }
+
+@media (max-width: 768px) {
+  .skill-name { font-size: 1.8rem; }
+  .article { padding: 32px 24px; }
+  .brand-header { padding: 14px 20px; }
+  .brand-nav { gap: 12px; }
+  .brand-nav a { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<header class="brand-header">
+  <a href="../index.html" class="brand-logo">
+    <div class="logo-icon">30</div>
+    <div class="logo-text">30see<span style="font-style:italic;font-weight:400;">.xyz</span></div>
+  </a>
+  <nav class="brand-nav">
+    <a href="../index.html">首页</a>
+    <a href="../courses.html">所有课程</a>
+    <a href="../skills.html">技能卡片</a>
+    <a href="../about.html">关于我们</a>
+    <a href="../relaxation.html">放松效果</a>
+    <a href="../courses.html" class="btn">开始学习</a>
+  </nav>
+</header>
+
+<section class="skill-hero">
+  <span class="skill-icon-big">📖</span>
+  <h1 class="skill-name">AI小说创作助手</h1>
+  <div class="skill-name-en">ai-novel-creator</div>
+  <p class="skill-tagline">用结构化模板 + 三幕结构 + 分章生成，把 8000-20000 字的短篇小说从灵感到成稿系统化推进。</p>
+  <div class="skill-badges">
+    <span class="badge badge-difficulty-intermediate">● 进阶</span>
+    <span class="badge badge-category">创作</span>
+    <span class="badge badge-rating">★ 4/5</span>
+  </div>
+  <div class="skill-link-row">
+    <a href="#usage">查看用法与心得 ↓</a>
+  </div>
+</section>
+
+<div class="article-wrap">
+  <article class="article" id="usage">
+
+    <section class="section">
+      <h2 class="section-title"><span class="sec-icon">📌</span>一句话简介</h2>
+      <p>这不是一个"丢个标题就吐出一整本小说"的魔法棒，而是一套<strong>结构化创作流程</strong>——先把你的零散素材填进五大模块模板，按三幕结构规划章节，再每次只生成 1-2 章并做连贯性校验，逐步把 8000-20000 字的短篇从大纲推到完稿。它的核心价值是<strong>用工程化方法保证长文本的连贯性和质量</strong>。</p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="sec-icon">🎯</span>适用场景</h2>
+      <p>这个 Skill 在以下情况最能发挥价值：</p>
+      <div class="scenario-grid">
+        <div class="scenario-card">
+          <div class="sc-title">有一个灵感想成篇</div>
+          <div class="sc-desc">"我想写个关于记忆交易的科幻短篇"——有主题但不知道怎么铺成完整故事。</div>
+        </div>
+        <div class="scenario-card">
+          <div class="sc-title">特定类型短篇创作</div>
+          <div class="sc-desc">悬疑、言情、科幻、奇幻，需要按类型规律铺设线索/情感线/世界观。</div>
+        </div>
+        <div class="scenario-card">
+          <div class="sc-title">已有大纲要扩写成文</div>
+          <div class="sc-desc">章节规划有了，但每章怎么写、节奏怎么控、前后怎么衔接需要指导。</div>
+        </div>
+        <div class="scenario-card">
+          <div class="sc-title">长文连贯性失控</div>
+          <div class="sc-desc">直接让 AI 写整篇经常前后矛盾、人物性格漂移，需要分章+校验的机制。</div>
+        </div>
+      </div>
+      <p style="margin-top:14px;"><strong>字数定位：</strong>8000-20000 字，建议 5-10 章，每章 800-2000 字。这是短篇的黄金区间——既有足够空间展开三幕结构，又不会长到连贯性失控。</p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="sec-icon">💡</span>核心价值：五大模块模板</h2>
+      <p>它最强的地方是提供了一套<strong>提示词模板</strong>（assets/novel-prompt-template.md），把创作素材分成五大模块。你只要把素材填进对应占位符，就能生成一份个性化创作蓝图：</p>
+      <div class="module-grid">
+        <div class="module-card">
+          <span class="mod-num">1</span>
+          <div class="mod-title">核心设定模块</div>
+          <div class="mod-desc">世界观、主题、基调——故事的底色</div>
+        </div>
+        <div class="module-card">
+          <span class="mod-num">2</span>
+          <div class="mod-title">角色设定模块</div>
+          <div class="mod-desc">主要角色的特征、动机、关系</div>
+        </div>
+        <div class="module-card">
+          <span class="mod-num">3</span>
+          <div class="mod-title">故事大纲模块</div>
+          <div class="mod-desc">三幕结构划分、章节规划</div>
+        </div>
+        <div class="module-card">
+          <span class="mod-num">4</span>
+          <div class="mod-title">写作指令模块</div>
+          <div class="mod-desc">风格、节奏、语言特点</div>
+        </div>
+        <div class="module-card">
+          <span class="mod-num">5</span>
+          <div class="mod-title">生成流程模块</div>
+          <div class="mod-desc">分章执行策略</div>
+        </div>
+      </div>
+      <p style="margin-top:14px;">这个设计的妙处在于：<strong>把"写小说"这件模糊的大事，拆成了五个可填空的小事</strong>。你不用一开始就想清楚全部，只需逐模块把素材填进去，模板会帮你发现哪些维度还没想透。</p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="sec-icon">🎬</span>核心价值：三幕结构 25:50:25</h2>
+      <p>它强制按业界标准的三幕结构分配篇幅，这是保证故事"有起承转合"而不是"流水账"的关键：</p>
+      <div class="ratio-bar">
+        <div class="ratio-seg ratio-act1">
+          <span>第一幕</span>
+          <span class="r-label">铺垫 25%</span>
+        </div>
+        <div class="ratio-seg ratio-act2">
+          <span>第二幕</span>
+          <span class="r-label">冲突 50%</span>
+        </div>
+        <div class="ratio-seg ratio-act3">
+          <span>第三幕</span>
+          <span class="r-label">结局 25%</span>
+        </div>
+      </div>
+      <p>对应到 5-10 章的规划：第一幕 2-3 章铺世界观和人物，第二幕 3-5 章推进冲突和转折，第三幕 1-2 章收束主题。这个比例不是随便定的——<strong>50% 给冲突是让故事"好看"的核心</strong>，很多人写短篇失败就是因为铺垫太长、冲突太短。</p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="sec-icon">⚙️</span>使用流程（六步走）</h2>
+      <p>它的完整工作流程是这样的：</p>
+      <ol class="flow-list">
+        <li><strong>收集创作素材</strong>：主题、一句话梗概、类型标签、背景设定、角色信息——素材越全，后续质量越高。</li>
+        <li><strong>填写提示词模板</strong>：把素材填进五大模块的 <code>{{占位符}}</code>，生成个性化创作提示词。</li>
+        <li><strong>确认大纲和章节规划</strong>：按字数定章节数（5-10 章），按三幕 25:50:25 分配每幕章数。</li>
+        <li><strong>分章生成内容</strong>：每次只生成 1-2 章，生成前确认章节序号、关键情节、人物情感状态、与前文衔接要点。</li>
+        <li><strong>连贯性校验与调整</strong>：每生成 1-2 章检查情节推进、人物性格、语言风格、时间线细节，发现问题及时修正后文策略。</li>
+        <li><strong>完成整篇</strong>：全文通读复查，确保结尾呼应开头、主题升华，输出完整文本。</li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="sec-icon">⚠️</span>踩坑记录</h2>
+      <ul class="pitfall-list">
+        <li><strong>想一次生成大半本：</strong>这是最大陷阱。一次性让 AI 写 5 章以上，几乎必然出现人物性格漂移、情节断裂。<strong>必须严格遵守 1-2 章/次的节奏</strong>，这是整个机制存在的意义。</li>
+        <li><strong>素材给得太少就开写：</strong>只给一句"写个爱情故事"就开始填模板，五大模块会大量留白。建议至少备齐<strong>主题 + 一句话梗概 + 主角设定</strong>三项再启动。</li>
+        <li><strong>跳过大纲直接写正文：</strong>觉得大纲麻烦直接进第 4 步，结果写到第三章发现结构散了。三幕比例规划是骨架，<strong>跳过骨架直接长肉必然塌方</strong>。</li>
+        <li><strong>不做连贯性校验：</strong>第 5 步的校验容易被当成可选步骤跳过。但正是这一步能抓出"第三章说主角怕黑、第五章又让他独自夜探古墓"这种矛盾。</li>
+        <li><strong>字数贪多：</strong>20000 字已是短篇上限，再长就该用长篇机制了。强行往 30000 字推会导致第二幕注水、节奏拖沓。</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="sec-icon">🚀</span>进阶技巧</h2>
+      <ul class="tip-list">
+        <li><strong>一句话梗概是灵魂：</strong>在收集素材阶段，花最多时间打磨"一句话梗概"。它决定了三幕结构的走向，梗概不清后面全乱。可以多写几个版本对比选最优。</li>
+        <li><strong>角色动机要写到"为什么"：</strong>角色设定模块别只写"性格冷酷"，要写"为什么冷酷（童年被遗弃）"。<strong>动机比特征更能驱动情节</strong>，也能在分章生成时保持人物行为一致。</li>
+        <li><strong>每章生成前先列衔接清单：</strong>进第 4 步前，明确写出：上章结尾在哪、本章要推进什么、涉及哪些人物、人物当前情感状态。这 4 项填好，连贯性校验通过率大幅提升。</li>
+        <li><strong>按类型重点设计：</strong>悬疑重点设计核心谜题和反转点（线索埋设/回收矩阵）；言情重点设计情感线核心冲突和成长弧线；科幻重点明确科技规则的边界和自洽性。别用一套通用模板套所有类型。</li>
+        <li><strong>用三幕比例倒推节奏：</strong>第一幕节奏要慢（建立代入感），第二幕节奏要快（密集冲突），第三幕节奏先紧后松（高潮→收束）。生成时按位置调整叙述密度。</li>
+        <li><strong>完稿后再做一次主题升华检查：</strong>第 6 步通读时，专门检查结尾是否呼应开头、主题是否得到升华。很多短篇败在结尾只是"事情结束了"而非"主题点亮了"。</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="sec-icon">💬</span>调用示例</h2>
+      <p>几种典型调用方式：</p>
+      <ul>
+        <li><code>写一个 10000 字的悬疑短篇，核心谜题是密室消失案，要有两次反转</code></li>
+        <li><code>帮我创作一部 8000 字的言情短篇，主角是性格互补的同事，核心冲突是职业选择与感情</code></li>
+        <li><code>我想写个 15000 字的科幻短篇，主题是记忆交易，先把世界观和角色设定帮我梳理出来</code></li>
+        <li><code>接着上一章继续写，注意保持主角谨慎的性格，本章要推进到真相揭露前的最后一个误导</code></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="sec-icon">🏆</span>推荐度总结</h2>
+      <div class="verdict">
+        <div class="verdict-score">★★★★☆</div>
+        <div class="verdict-text">短篇小说创作的"工程化脚手架"——适合有灵感但缺结构、想写长文又怕连贯性失控的创作者。严格遵守 1-2 章/次的节奏，质量提升立竿见影。</div>
+      </div>
+    </section>
+
+    <div class="back-row">
+      <a href="../skills.html" class="back-link">← 返回技能卡片库</a>
+      <a href="../skills/req-clarifier.html" class="back-link secondary">看上一个：需求澄清助手 →</a>
+    </div>
+
+  </article>
+</div>
+
+<footer>
+  <img src="../images/logo.png" alt="30see Logo" class="footer-logo">
+  <p class="footer-text">30see.xyz - 公益AI普惠教育</p>
+  <div class="footer-links">
+    <a href="../index.html">首页</a>
+    <a href="../courses.html">所有课程</a>
+    <a href="../skills.html">技能卡片</a>
+    <a href="../about.html">关于我们</a>
+    <a href="../relaxation.html">放松效果</a>
+  </div>
+  <p class="footer-text">© 2026 30see. All rights reserved.</p>
+</footer>
+
+<script src="../js/stats.js"></script>
+<script>
+if (typeof StatsAPI !== 'undefined') {
+    StatsAPI.incrementVisit('skill-ai-novel-creator');
+}
+</script>
+</body>
+</html>
