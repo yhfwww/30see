@@ -13,6 +13,7 @@
 - **公益免费**：所有教程与效果页面完全开放，无任何付费门槛
 - **AI 驱动**：内容围绕人工智能学习路径精心设计
 - **专业内容**：由 AI 专家编撰的结构化教程（如《Git for Creators》九章节完整指南）
+- **技能卡片库**：画廊式 AI Skills 实战心得分享，每个 Skill 一张卡片，支持分类与难度筛选
 - **放松效果**：内置多种纯前端动画效果（樱花、烟花、星际、雨滴、几何、气泡），学习间隙可放松身心
 - **响应式设计**：适配移动端与桌面端
 - **零依赖部署**：纯静态 HTML/CSS/JS，可托管于 GitHub Pages 等任意静态服务
@@ -40,6 +41,7 @@
 ├── index.html                 # 首页（Hero + 功能展示）
 ├── about.html                 # 关于我们
 ├── courses.html               # 教程课程目录
+├── skills.html                # 技能卡片库（画廊式，含分类/难度筛选）
 ├── relaxation.html            # 放松效果目录
 ├── git-for-creators.html      # 《Git for Creators》九章节教程
 ├── ai-learning-guide.html     # AI 学习指南
@@ -49,6 +51,9 @@
 │   └── stats.js               # 访问量统计模块（StatsAPI）
 ├── images/
 │   └── logo.png               # 网站 LOGO
+├── skills/                    # 技能卡片详情页
+│   ├── skill-template.html    # 标准详情页模板（供套用）
+│   └── sample-skill.html      # 示例占位心得
 ├── relaxation/                # 放松效果子页面
 │   ├── bubble_page.html       # 气泡动画
 │   ├── fireworks.html         # 烟花动画

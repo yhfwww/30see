@@ -22,6 +22,7 @@
 | `index.html` | 首页（Hero + 功能展示） |
 | `about.html` | 关于我们 |
 | `courses.html` | 教程课程目录 |
+| `skills.html` | 技能卡片库（画廊式，含分类/难度筛选） |
 | `relaxation.html` | 放松效果目录 |
 | `git-for-creators.html` | Git 创作者指南（九章节） |
 | `ai-learning-guide.html` | AI 学习指南 |
@@ -29,6 +30,7 @@
 | `admin.html` | 管理员统计页（MD5 密码认证） |
 | `js/stats.js` | 访问量统计模块 `StatsAPI` |
 | `images/logo.png` | 网站 LOGO |
+| `skills/*.html` | 技能卡片详情页（每个 Skill 一篇心得） |
 | `relaxation/*.html` | 各类放松动画效果页 |
 | `DESIGN.md` | 完整设计系统规范 |
 | `CNAME` | GitHub Pages 自定义域名 |
@@ -127,6 +129,19 @@
   - 使用 Noto Serif SC 和 Playfair Display 字体
   - 包含代码块、步骤列表、概念卡片等组件
 
+### 技能卡片库（skills.html + skills/）
+
+- **定位**：AI Skills 实战心得分享，区别于「课程」的系统化教学，每张卡片是单页、主观的经验分享
+- **skills.html**：画廊式目录页
+  - 顶部筛选条：按 `分类`（writing/coding/analysis/creation/other）+ `难度`（newbie/intermediate/advanced）筛选
+  - 卡片网格：每张卡片含图标 / Skill 名 / 一句话简介 / 难度标签 / 分类标签 / 评分（★） / 「查看心得」按钮
+  - 筛选用原生 JS 实现（`data-category` / `data-difficulty` 属性驱动）
+- **skills/skill-template.html**：标准详情页模板，新增 Skill 心得时复制此文件套用
+- **skills/sample-skill.html**：示例占位文章，演示详情页结构
+- **详情页统一结构**：一句话简介 → 适用场景 → 使用心得 → 踩坑记录 → 进阶技巧 → 推荐度总结
+- **难度标签 class 对应**：`tag-difficulty-newbie` / `tag-difficulty-intermediate` / `tag-difficulty-advanced`
+- **详情页路径在 `skills/` 子目录**，内部链接需用 `../` 相对路径回到根（如 `../index.html`、`../images/logo.png`、`../js/stats.js`）
+
 ---
 
 ## 📊 访问量统计功能
@@ -198,8 +213,17 @@
 
 4. **新增页面**
    - 在 `courses.html` 或 `relaxation.html` 目录页同步登记入口卡片
-   - 页脚 `.footer-links` 保持与全站一致：首页 / 所有课程 / 关于我们 / 放松效果
+   - 页脚 `.footer-links` 保持与全站一致：首页 / 所有课程 / 技能卡片 / 关于我们 / 放松效果
    - 顶部导航、配色、字体须与其他页面统一
+
+5. **新增 Skill 心得（重要流程）**
+   1. 复制 `skills/skill-template.html` 为 `skills/你的skill名.html`
+   2. 替换所有 `【】` 占位符与 `TODO` 标记内容
+   3. 难度 badge 三选一：`badge-difficulty-newbie` / `-intermediate` / `-advanced`
+   4. 评分用 `★` 满星 + `☆` 空星表示（如 4/5 = `★★★★☆`）
+   5. 在 `skills.html` 卡片网格中新增一张 `<div class="skill-card" data-category="..." data-difficulty="...">`，链接到新详情页
+   6. 把 `StatsAPI.incrementVisit('skill-xxx')` 的页面标识改为唯一值
+   7. 详情页在 `skills/` 子目录，所有站内链接须用 `../` 前缀
 
 ---
 
@@ -237,6 +261,7 @@ python3 -m http.server 8000
 | 任务 | 入口 |
 | --- | --- |
 | 新增教程课程 | 在 `courses.html` 添加卡片，新建对应 `xxx.html` 教程页 |
+| 新增 Skill 心得 | 复制 `skills/skill-template.html` → 在 `skills.html` 卡片网格添加入口 |
 | 新增放松效果 | 在 `relaxation/` 下新建 HTML，在 `relaxation.html` 添加入口 |
 | 修改全站配色 | 调整各页面 `:root` 中的 CSS 变量，并同步更新 `DESIGN.md` |
 | 查看访问统计 | 访问 `/admin.html` 输入密码 |

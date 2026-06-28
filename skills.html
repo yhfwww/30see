@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="30see 技能卡片库 - AI Skills 实战心得分享">
+<meta name="keywords" content="AI技能,Skills,实战心得,AI经验">
+<title>30see - 技能卡片库</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary-blue: #0066cc;
+--primary-blue-light: #0099ff;
+--primary-orange: #ff6600;
+--primary-orange-light: #ff9933;
+--accent-purple: #6a0dad;
+--accent-red: #ff3333;
+--brand-green: #28a745;
+--dark: #1a1a2e;
+--light: #f8f9fa;
+--white: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Poppins', 'Noto Sans SC', sans-serif;
+  background: linear-gradient(135deg, var(--light) 0%, #e9ecef 100%);
+  color: var(--dark);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── BRAND HEADER ── */
+.brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.brand-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-orange) 100%);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: bold; font-size: 16px;
+}
+.logo-text { color: #fff; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+.brand-nav { display: flex; gap: 20px; align-items: center; }
+.brand-nav a {
+  color: rgba(255,255,255,0.8); text-decoration: none;
+  font-family: 'Noto Sans SC', sans-serif; font-size: 13px; letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+.brand-nav a:hover { color: #fff; }
+.brand-nav .btn {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+  color: #fff; padding: 8px 16px; border-radius: 6px;
+  font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em;
+}
+.brand-nav .btn:hover { background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--primary-blue) 100%); color: #fff; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 50vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center; padding: 60px 20px;
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--dark) 0%, #16213e 50%, #0f3460 100%);
+}
+.hero::before {
+  content: ''; position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(0, 102, 204, 0.15) 0%, transparent 70%);
+  animation: pulse 8s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+.hero-logo { max-width: 200px; margin-bottom: 24px; position: relative; z-index: 1; filter: drop-shadow(0 8px 24px rgba(0,102,204,0.3)); }
+.tagline {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem; font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--primary-orange-light) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 16px; position: relative; z-index: 1;
+}
+.tagline span { color: var(--primary-orange-light); -webkit-text-fill-color: var(--primary-orange-light); }
+.description { font-size: 1.1rem; color: rgba(255,255,255,0.8); max-width: 600px; margin-bottom: 28px; position: relative; z-index: 1; }
+.back-btn {
+  position: relative; z-index: 1;
+  padding: 12px 28px; font-size: 1rem; font-weight: 600;
+  background: transparent; color: #fff;
+  border: 2px solid rgba(255,255,255,0.3); border-radius: 30px;
+  text-decoration: none; transition: all 0.3s ease;
+}
+.back-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; transform: translateY(-2px); }
+
+/* ── FILTER BAR ── */
+.filter-section {
+  max-width: 1200px; margin: -40px auto 0; padding: 0 20px;
+  position: relative; z-index: 2;
+}
+.filter-bar {
+  background: var(--white); border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.filter-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.filter-label { font-size: 0.85rem; font-weight: 600; color: var(--dark); min-width: 60px; }
+.filter-btn {
+  padding: 6px 16px; font-size: 0.85rem; font-weight: 500;
+  background: var(--light); color: #495057;
+  border: 1px solid transparent; border-radius: 20px;
+  cursor: pointer; transition: all 0.2s ease;
+  font-family: inherit;
+}
+.filter-btn:hover { background: rgba(0, 102, 204, 0.08); color: var(--primary-blue); }
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  color: #fff; box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+/* ── SKILLS GRID ── */
+.skills-section { padding: 50px 20px 80px; max-width: 1200px; margin: 0 auto; }
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px; margin-top: 30px;
+}
+.skill-card {
+  background: var(--white); border-radius: 16px; overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease; border: 2px solid transparent;
+  display: flex; flex-direction: column;
+}
+.skill-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(0, 102, 204, 0.15);
+  border-color: var(--primary-blue);
+}
+.skill-card-top {
+  padding: 28px 24px 20px; position: relative;
+  background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
+  text-align: center;
+}
+.skill-card-top::before {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(0, 102, 204, 0.25) 0%, transparent 70%);
+}
+.skill-icon { font-size: 2.8rem; display: block; margin-bottom: 12px; position: relative; z-index: 1; }
+.skill-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.25rem; font-weight: 700; color: #fff;
+  margin-bottom: 6px; position: relative; z-index: 1;
+}
+.skill-subtitle { font-size: 0.82rem; color: rgba(255,255,255,0.65); position: relative; z-index: 1; }
+.skill-body { padding: 20px 24px 24px; flex: 1; display: flex; flex-direction: column; }
+.skill-desc { font-size: 0.9rem; color: #495057; line-height: 1.7; margin-bottom: 16px; flex: 1; }
+.skill-meta { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.meta-tag {
+  font-size: 0.75rem; padding: 4px 12px; border-radius: 20px;
+  display: inline-flex; align-items: center; gap: 4px; font-weight: 500;
+}
+.tag-difficulty-newbie { color: var(--brand-green); background: rgba(40, 167, 69, 0.12); }
+.tag-difficulty-intermediate { color: var(--primary-blue); background: rgba(0, 102, 204, 0.1); }
+.tag-difficulty-advanced { color: var(--accent-purple); background: rgba(106, 13, 173, 0.1); }
+.tag-category { color: #6c757d; background: var(--light); }
+.skill-rating { font-size: 0.95rem; color: var(--primary-orange); margin-bottom: 16px; letter-spacing: 2px; }
+.skill-rating .rating-text { color: #6c757d; font-size: 0.78rem; margin-left: 6px; letter-spacing: 0; }
+.skill-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px; font-size: 0.95rem; font-weight: 600;
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  color: #fff; border: none; border-radius: 30px;
+  text-decoration: none; transition: all 0.3s ease;
+}
+.skill-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 102, 204, 0.35); }
+
+.empty-hint {
+  grid-column: 1 / -1; text-align: center; padding: 60px 20px;
+  color: #6c757d; font-size: 0.95rem;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
+  color: var(--white); padding: 40px 20px; text-align: center;
+}
+.footer-logo { max-width: 160px; margin-bottom: 16px; }
+.footer-text { opacity: 0.8; font-size: 0.9rem; }
+.footer-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
+.footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+.footer-links a:hover { color: var(--primary-blue-light); }
+
+@media (max-width: 768px) {
+  .tagline { font-size: 2rem; }
+  .description { font-size: 1rem; }
+  .brand-header { padding: 14px 20px; }
+  .brand-nav { gap: 12px; }
+  .brand-nav a { font-size: 12px; }
+  .filter-group { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<header class="brand-header">
+  <a href="index.html" class="brand-logo">
+    <div class="logo-icon">30</div>
+    <div class="logo-text">30see<span style="font-style:italic;font-weight:400;">.xyz</span></div>
+  </a>
+  <nav class="brand-nav">
+    <a href="index.html">首页</a>
+    <a href="courses.html">所有课程</a>
+    <a href="skills.html">技能卡片</a>
+    <a href="about.html">关于我们</a>
+    <a href="relaxation.html">放松效果</a>
+    <a href="courses.html" class="btn">开始学习</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <img src="images/logo.png" alt="30see Logo" class="hero-logo">
+  <h1 class="tagline">AI <span>技能卡片库</span></h1>
+  <p class="description">
+    真实使用过的 AI Skills 实战心得，每张卡片记录一个技能的场景、心得、踩坑与进阶技巧。
+  </p>
+  <a href="index.html" class="back-btn">🏠 返回首页</a>
+</section>
+
+<section class="filter-section">
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">分类</span>
+      <button class="filter-btn active" data-filter="category" data-value="all">全部</button>
+      <button class="filter-btn" data-filter="category" data-value="writing">写作</button>
+      <button class="filter-btn" data-filter="category" data-value="coding">编程</button>
+      <button class="filter-btn" data-filter="category" data-value="analysis">分析</button>
+      <button class="filter-btn" data-filter="category" data-value="creation">创作</button>
+      <button class="filter-btn" data-filter="category" data-value="other">其他</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">难度</span>
+      <button class="filter-btn active" data-filter="difficulty" data-value="all">全部</button>
+      <button class="filter-btn" data-filter="difficulty" data-value="newbie">新手</button>
+      <button class="filter-btn" data-filter="difficulty" data-value="intermediate">进阶</button>
+      <button class="filter-btn" data-filter="difficulty" data-value="advanced">高阶</button>
+    </div>
+  </div>
+</section>
+
+<section class="skills-section">
+  <div class="skills-grid" id="skillsGrid">
+
+    <!-- 示例卡片：复制此 <div class="skill-card">...</div> 区块即可新增卡片 -->
+    <div class="skill-card" data-category="analysis" data-difficulty="intermediate">
+      <div class="skill-card-top">
+        <span class="skill-icon">🎯</span>
+        <h3 class="skill-title">需求澄清助手</h3>
+        <p class="skill-subtitle">req-clarifier · 把模糊想法变可执行 PRD</p>
+      </div>
+      <div class="skill-body">
+        <p class="skill-desc">
+          迭代式需求澄清流程：先结构化整理已知信息，再克制追问（每轮最多 4 问），逐步把完整度推到 85 分以上，输出含功能范围、风险假设、开放问题的完整需求规格文档。
+        </p>
+        <div class="skill-meta">
+          <span class="meta-tag tag-difficulty-intermediate">● 进阶</span>
+          <span class="meta-tag tag-category">分析</span>
+        </div>
+        <div class="skill-rating">★★★★★<span class="rating-text">5/5</span></div>
+        <a href="skills/req-clarifier.html" class="skill-btn">查看心得 →</a>
+      </div>
+    </div>
+
+    <!--
+      新增卡片模板：
+      <div class="skill-card" data-category="写作分类" data-difficulty="难度">
+        <div class="skill-card-top">
+          <span class="skill-icon">图标emoji</span>
+          <h3 class="skill-title">Skill 名称</h3>
+          <p class="skill-subtitle">一句话副标题</p>
+        </div>
+        <div class="skill-body">
+          <p class="skill-desc">一句话简介</p>
+          <div class="skill-meta">
+            <span class="meta-tag tag-difficulty-newbie">● 难度</span>
+            <span class="meta-tag tag-category">分类</span>
+          </div>
+          <div class="skill-rating">★★★★☆<span class="rating-text">4/5</span></div>
+          <a href="skills/你的页面.html" class="skill-btn">查看心得 →</a>
+        </div>
+      </div>
+
+      data-category 可选：writing / coding / analysis / creation / other
+      data-difficulty 可选：newbie / intermediate / advanced
+      难度标签 class 对应：tag-difficulty-newbie / tag-difficulty-intermediate / tag-difficulty-advanced
+    -->
+
+    <div class="empty-hint" id="emptyHint" style="display:none;">
+      😅 该筛选条件下暂无技能卡片
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img src="images/logo.png" alt="30see Logo" class="footer-logo">
+  <p class="footer-text">30see.xyz - 公益AI普惠教育</p>
+  <div class="footer-links">
+    <a href="index.html">首页</a>
+    <a href="courses.html">所有课程</a>
+    <a href="skills.html">技能卡片</a>
+    <a href="about.html">关于我们</a>
+    <a href="relaxation.html">放松效果</a>
+  </div>
+  <p class="footer-text">© 2026 30see. All rights reserved.</p>
+</footer>
+
+<script src="js/stats.js"></script>
+<script>
+if (typeof StatsAPI !== 'undefined') {
+    StatsAPI.incrementVisit('skills');
+}
+
+// 卡片筛选逻辑
+(function () {
+  var state = { category: 'all', difficulty: 'all' };
+  var buttons = document.querySelectorAll('.filter-btn');
+  var cards = document.querySelectorAll('.skill-card');
+  var emptyHint = document.getElementById('emptyHint');
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var filter = btn.getAttribute('data-filter');
+      var value = btn.getAttribute('data-value');
+      // 切换激活态
+      buttons.forEach(function (b) {
+        if (b.getAttribute('data-filter') === filter) b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      state[filter] = value;
+      applyFilter();
+    });
+  });
+
+  function applyFilter() {
+    var visibleCount = 0;
+    cards.forEach(function (card) {
+      var matchCat = state.category === 'all' || card.getAttribute('data-category') === state.category;
+      var matchDiff = state.difficulty === 'all' || card.getAttribute('data-difficulty') === state.difficulty;
+      var show = matchCat && matchDiff;
+      card.style.display = show ? '' : 'none';
+      if (show) visibleCount++;
+    });
+    emptyHint.style.display = visibleCount === 0 ? '' : 'none';
+  }
+})();
+</script>
+</body>
+</html>
